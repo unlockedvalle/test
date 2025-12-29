@@ -1,68 +1,169 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zephiryx Gaming</title>
+    <title>Zephiryx Gaming - Search</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #0a2e0a; /* Verde oscuro de fondo */
-            color: #ffffff; /* Texto blanco para contraste */
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
         }
-        h1 {
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a1f0a 0%, #051005 100%);
+            color: #d4ffd4;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        header {
             text-align: center;
-            color: #00ff00; /* Verde brillante */
+            margin-bottom: 40px;
         }
+
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 900;
+            color: #39ff14;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(57, 255, 20, 0.6), 0 0 40px rgba(57, 255, 20, 0.4);
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
         #searchInput {
             width: 100%;
-            max-width: 600px;
-            padding: 10px;
-            margin: 20px auto;
-            display: block;
-            background-color: #1b4f1b; /* Verde medio */
-            border: 2px solid #00ff00;
-            color: #ffffff;
-            font-size: 16px;
+            padding: 16px 20px 16px 50px; /* Espacio para la lupa */
+            font-size: 1.1rem;
+            background: rgba(10, 31, 10, 0.7);
+            border: 2px solid #39ff14;
+            border-radius: 50px;
+            color: #d4ffd4;
+            outline: none;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
         }
+
+        #searchInput:focus {
+            border-color: #00ff9d;
+            box-shadow: 0 0 25px rgba(0, 255, 157, 0.4);
+            background: rgba(10, 31, 10, 0.9);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #39ff14;
+            font-size: 1.3rem;
+            pointer-events: none;
+        }
+
         #gameList {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
             margin: 0 auto;
         }
+
         .game-item {
-            background-color: #1b4f1b; /* Verde medio */
-            border: 2px solid #00ff00;
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.35s ease;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(20, 50, 20, 0.4);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(57, 255, 20, 0.25);
         }
+
         .game-item:hover {
-            transform: scale(1.05);
+            transform: translateY(-12px) scale(1.04);
+            border-color: #39ff14;
+            box-shadow: 0 20px 40px rgba(57, 255, 20, 0.25);
         }
+
         .game-item img {
             width: 100%;
-            height: auto;
-            border-radius: 4px;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            border-bottom: 2px solid rgba(57, 255, 20, 0.3);
         }
+
         .game-item p {
-            margin: 10px 0 0;
-            font-weight: bold;
-            color: #00ff00;
+            padding: 18px 15px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #39ff14;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #loadMore {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 50px auto;
+            padding: 16px 40px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #39ff14, #00ff9d);
+            color: #0a1f0a;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(57, 255, 20, 0.4);
+        }
+
+        #loadMore:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(57, 255, 20, 0.6);
+            background: linear-gradient(90deg, #00ff9d, #39ff14);
+        }
+
+        #loadMore i {
+            font-size: 1.3rem;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.4rem; }
+            .game-item img { height: 180px; }
+            #loadMore { font-size: 1rem; padding: 14px 30px; }
         }
     </style>
 </head>
 <body>
-    <h1>Zephiryx Gaming</h1>
-    <input type="text" id="searchInput" placeholder="Busca un juego...">
+    <header>
+        <h1>ZEPHYRYX GAMING</h1>
+    </header>
+
+    <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="searchInput" placeholder="BUSCAR JUEGO...">
+    </div>
+
     <div id="gameList"></div>
+
+    <button id="loadMore">
+        <i class="fas fa-arrow-down"></i> CARGAR MÁS
+    </button>
 
     <script>
         const games = [
@@ -513,35 +614,57 @@
             "zombie-derby-pixel-survival"
         ];
 
+        let currentIndex = 0;
+        const batchSize = 12;
+
         function titleCase(slug) {
-            return slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            return slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         }
 
-        function renderGames(filteredGames) {
-            const gameList = document.getElementById('gameList');
-            gameList.innerHTML = '';
-            filteredGames.forEach(slug => {
-                const gameItem = document.createElement('div');
-                gameItem.classList.add('game-item');
-                gameItem.innerHTML = `
-                    <img src="https://23-azo.github.io/imgs//${slug}.png" alt="${titleCase(slug)}" onerror="this.src='https://via.placeholder.com/200?text=No+Image';">
+        function renderGames(filtered, start, end) {
+            const container = document.getElementById('gameList');
+            for (let i = start; i < end && i < filtered.length; i++) {
+                const slug = filtered[i];
+                const item = document.createElement('div');
+                item.className = 'game-item';
+                item.innerHTML = `
+                    <img src="https://23-azo.github.io/imgs/${slug}.png" alt="${titleCase(slug)}"
+                         onerror="this.src='https://via.placeholder.com/300x220/0a1f0a/39ff14?text=${slug.toUpperCase()}'">
                     <p>${titleCase(slug)}</p>
                 `;
-                gameItem.addEventListener('click', () => {
-                    window.location.href = `https://unlockedvalle.github.io/play/${slug}.html`;
-                });
-                gameList.appendChild(gameItem);
-            });
+                item.onclick = () => window.open(`https://unlockedvalle.github.io/play/${slug}.html`, '_blank');
+                container.appendChild(item);
+            }
+            updateLoadMoreButton(filtered);
         }
 
-        renderGames(games);
+        function updateLoadMoreButton(filtered) {
+            const btn = document.getElementById('loadMore');
+            btn.style.display = currentIndex >= filtered.length ? 'none' : 'flex';
+        }
 
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const filtered = games.filter(slug => slug.toLowerCase().includes(searchTerm));
-            renderGames(filtered);
-        });
+        let currentList = games;
+
+        function loadInitial() {
+            currentIndex = batchSize;
+            renderGames(currentList, 0, currentIndex);
+        }
+
+        loadInitial();
+
+        document.getElementById('loadMore').onclick = () => {
+            const start = currentIndex;
+            currentIndex += batchSize;
+            renderGames(currentList, start, currentIndex);
+        };
+
+        document.getElementById('searchInput').oninput = (e) => {
+            const term = e.target.value.toLowerCase().trim();
+            currentList = games.filter(g => g.toLowerCase().includes(term));
+            currentIndex = batchSize;
+            document.getElementById('gameList').innerHTML = '';
+            renderGames(currentList, 0, currentIndex);
+        };
     </script>
 </body>
 </html>
-```
