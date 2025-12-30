@@ -1,1194 +1,1108 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-	<head>
-		<link rel="icon" href="images/favicon.png" sizes="32x32">
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-		<title>23azo Games Play Online At 23azo-games.github.io Games: Play in Browser, Fullscreen Mode, Ad-Free Experience</title>
-				<meta name="description" content="Welcome to 23azo-game, a dynamic online platform tailored for middle school students. Dive into a world of engaging entertainment games designed to make learning fun in the school environment">
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zephiryx Gaming - Juega sin que te pillen</title>
+    <link rel="icon" type="image/png" href="https://files.catbox.moe/2u6mbz.png">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00ff99;
+            --primary-dark: #00cc77;
+            --dark: #000000;
+            --dark-2: #121212;
+            --light: #ffffff;
+            --gray: #727272;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:var(--dark); color:var(--light); font-family:'Poppins',sans-serif; overflow-x:hidden; }
+        ::selection { background:var(--primary); color:black; }
+        /* Navbar */
+        .nav {
+            position:fixed;
+            top:0; left:0; right:0;
+            padding:1.5rem;
+            background:transparent;
+            backdrop-filter:blur(10px);
+            z-index:100;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .nav-logo {
+            font-size:1.5rem;
+            font-weight:800;
+            color:var(--primary);
+            display:flex;
+            align-items:center;
+            gap:0.5rem;
+            letter-spacing:-0.05em;
+            text-decoration:none;
+        }
+        .nav-logo img {
+            width:38px;
+            height:38px;
+            object-fit:contain;
+            background:transparent;
+            border-radius:0;
+        }
+        .nav-links {
+            display:flex;
+            align-items:center;
+            gap:2rem;
+        }
+        .nav-links a {
+            color:var(--light);
+            text-decoration:none;
+            font-weight:500;
+            position:relative;
+            font-size:0.95rem;
+            transition:color 0.3s;
+        }
+        .nav-links a:hover { color:var(--primary); }
+        .nav-links a::after {
+            content:'';
+            position:absolute;
+            width:0; height:2px;
+            bottom:-6px; left:0;
+            background:var(--primary);
+            transition:width 0.3s ease;
+        }
+        .nav-links a:hover::after { width:100%; }
+        /* Barra de búsqueda */
+        .search-container {
+            position:relative;
+            width:280px;
+        }
+        .search-input {
+            width:100%;
+            padding:0.75rem 1rem 0.75rem 2.8rem;
+            background:rgba(255,255,255,0.08);
+            border:2px solid transparent;
+            border-radius:50px;
+            color:white;
+            font-size:0.95rem;
+            backdrop-filter:blur(8px);
+            transition:all 0.3s;
+        }
+        .search-input::placeholder {
+            color:rgba(255,255,255,0.6);
+        }
+        .search-input:focus {
+            outline:none;
+            background:rgba(255,255,255,0.12);
+            border:2px solid var(--primary);
+            box-shadow:0 0 20px rgba(0,255,153,0.4);
+        }
+        .search-icon {
+            position:absolute;
+            left:0.9rem;
+            top:50%;
+            transform:translateY(-50%);
+            color:var(--gray);
+            font-size:1.1rem;
+            pointer-events:none;
+            transition:color 0.3s;
+        }
+        .search-input:focus ~ .search-icon {
+            color:var(--primary);
+        }
+        /* Dropdown de búsqueda */
+        .search-dropdown {
+            position:absolute;
+            top:100%;
+            right:0;
+            width:400px;
+            background:rgba(18,18,18,0.95);
+            backdrop-filter:blur(15px);
+            border:2px solid var(--primary);
+            border-radius:20px;
+            margin-top:12px;
+            padding:20px;
+            box-shadow:0 10px 40px rgba(0,255,153,0.2);
+            display:none;
+            z-index:999;
+            max-height:70vh;
+            overflow-y:auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .search-dropdown::-webkit-scrollbar {
+            display: none;
+        }
+        .search-dropdown.active {
+            display:block;
+            animation:fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity:0; transform:translateY(-10px); }
+            to { opacity:1; transform:translateY(0); }
+        }
+        .search-dropdown h3 {
+            font-size:1.4rem;
+            color:var(--light);
+            margin-bottom:15px;
+            text-align:left;
+            font-weight:600;
+        }
+        .no-results {
+            color:var(--gray);
+            font-style:italic;
+            text-align:center;
+            padding:20px;
+        }
+        .search-result-item {
+            display:flex;
+            align-items:center;
+            gap:15px;
+            padding:12px 0;
+            border-bottom:1px solid rgba(255,255,255,0.08);
+            cursor:pointer;
+            transition:background 0.2s;
+        }
+        .search-result-item:hover {
+            background:rgba(255,255,255,0.05);
+            border-radius:12px;
+            padding-left:10px;
+            padding-right:10px;
+        }
+        .search-result-item:last-child {
+            border-bottom:none;
+        }
+        .result-img {
+            width:60px;
+            height:60px;
+            object-fit:cover;
+            border-radius:12px;
+            background:#222;
+        }
+        .result-title {
+            flex:1;
+            font-size:1.1rem;
+            color:var(--light);
+        }
+        /* Partículas */
+        #particles-js { position:fixed; width:100%; height:100%; top:0; left:0; z-index:-1; }
+        /* Hero */
+        .hero-section {
+            padding-top:12vw; display:flex; justify-content:center; align-items:flex-start;
+            gap:6vw; flex-wrap:wrap; min-height:90vh;
+        }
+        .hero-text { flex:1; max-width:45vw; }
+        .hero-text h1 {
+            font-family:'Bebas Neue',sans-serif; font-size:8.5vw; margin:0; text-align:left;
+        }
+        @keyframes waveColor {
+            0% { background-position:200% 0; }
+            100% { background-position:-200% 0; }
+        }
+        .highlight {
+            background:linear-gradient(90deg,var(--primary),#66ffbb,var(--primary));
+            background-size:200%; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            animation:waveColor 20s linear infinite;
+        }
+        .hero-text h2 {
+            font-size:2.3vw; margin:1.5vw 0 2vw; opacity:0.9;
+        }
+        .start-btn {
+            display:inline-block; padding:1.3vw 3.5vw; background:var(--primary); color:black;
+            font-weight:900; font-size:1.7vw; border-radius:1vw; text-decoration:none;
+            position:relative; overflow:hidden;
+        }
+        .start-btn:hover { background:var(--primary-dark); }
+        .start-btn .icon {
+            position:absolute; width:2.8vw; opacity:0; pointer-events:none;
+            left:50%; top:50%; transform:translate(-50%,-50%) scale(0.5);
+            transition:all .5s ease;
+        }
+        .start-btn:hover .icon { opacity:1; }
+        .start-btn:hover .icon-joystick { transform:translate(-50%,-220%) scale(1.2) rotate(-15deg); }
+        .start-btn:hover .icon-controller { transform:translate(-150%,120%) scale(1.2) rotate(10deg); }
+        .start-btn:hover .icon-laptop { transform:translate(-300%,-150%) scale(1.2) rotate(-10deg); }
+        .start-btn:hover .icon-coin { transform:translate(180%,-180%) scale(1.2) rotate(15deg); }
+        /* Sliders laterales con juegos reales */
+        .hero-gallery {
+            display:flex; gap:3vw; height:30vw;
+        }
+        .slider-wrapper { transform:rotate(5deg); }
+        .slider-column { width:15vw; height:30vw; overflow:hidden; border-radius:1.8vw; }
+        .slider-track { display:flex; flex-direction:column; animation:scroll-up 32s linear infinite; }
+        .slider-track.reverse { animation:scroll-down 32s linear infinite; }
+        .slider-track a { padding:0.6vw; }
+        .slider-track img {
+            width:100%; height:15vw; object-fit:cover; border-radius:1.8vw;
+            transition:transform .3s; outline:0.2vw solid transparent;
+        }
+        .slider-track a:hover img { transform:scale(1.08); outline:0.2vw solid var(--primary); }
+        @keyframes scroll-up { 0%{transform:translateY(0)} 100%{transform:translateY(-50%)} }
+        @keyframes scroll-down { 0%{transform:translateY(-50%)} 100%{transform:translateY(0)} }
+        /* Títulos de sección con texto + icono */
+        .section-title {
+            text-align:center; margin:10vw 0 4vw; font-size:5.5vw; font-family:'Bebas Neue',sans-serif;
+            color:var(--primary);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:1vw;
+        }
+        /* Grid de juegos - cuadrados y 6 por línea en desktop */
+        .container1 {
+            display:flex; flex-wrap:wrap; justify-content:center; gap:2.5vw;
+            margin:0 auto 8vw; max-width:95%;
+        }
+        .image-container {
+            position:relative; overflow:hidden; border-radius:1.5vw;
+            flex:0 0 calc(16.66% - 2.5vw);
+            aspect-ratio:1/1;
+            transition:.4s;
+        }
+        .image-container:hover {
+            transform:scale(1.05);
+            box-shadow:0 0 0 0.15vw var(--primary);
+        }
+        .image { width:100%; height:100%; object-fit:cover; border-radius:1.5vw; }
+        .overlay {
+            position:absolute; inset:0; background:rgba(0,0,0,0.6);
+            display:flex; align-items:center; justify-content:center; opacity:0; transition:.4s;
+        }
+        .image-container:hover .overlay { opacity:1; }
+        .text { font-family:'Bebas Neue',sans-serif; font-size:1.8vw; color:var(--primary); text-shadow:0 0 10px black; }
+        /* Estadísticas */
+        .details-frame {
+            background:#111; padding:6vw 0; margin-top:8vw;
+            display:flex; justify-content:space-around; flex-wrap:wrap;
+            border-top:0.4vw solid var(--primary); border-bottom:0.4vw solid var(--primary);
+        }
+        .detail { text-align:center; min-width:200px; margin:2vw 0; }
+        .toph1 { font-size:6vw; font-weight:900; color:var(--primary); }
+        .bottomh1 { font-size:1.6vw; opacity:0.8; text-transform:uppercase; }
 
-			<meta property="og:url" content="23azo-games.github.io" />
-      <meta property="og:image:width" content="200 px" />
-      <meta property="og:image:height" content="200 px" />
-      <meta property="og:title" content="23azo-games.github.io" />
-      <meta property="og:site_name" content="23azo-games.github.io" />
-      <meta property="og:description" content="Welcome to 23azo-game, a dynamic online platform tailored for middle school students. Dive into a world of engaging entertainment games designed to make learning fun in the school environment" />
-      <meta property="og:type" content="website" />
-      <meta property="og:image" content="images/icon_game.png">
-
-
-						<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="css/jquery-comments.css" />
-		<link rel="stylesheet" type="text/css" href="css/user.css" />
-		<link rel="stylesheet" type="text/css" href="css/style.css" />
-		<link rel="stylesheet" type="text/css" href="css/custom.css" />
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" />
-		<!-- Font Awesome icons (free version)-->
-		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-		<!-- Google fonts-->
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-F92L6YLL67"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-F92L6YLL67');
-</script>
-<!-- ads -->
-
-<script type="text/javascript" async>!function(e,t){a=e.createElement("script"),m=e.getElementsByTagName("script")[0],a.async=1,a.src=t,m.parentNode.insertBefore(a,m)}(document,"https://universal.wgplayer.com/tag/?lh="+window.location.hostname+"&wp="+window.location.pathname+"&ws="+window.location.search);
-    </script>
-
-<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8584970292834519"
-     crossorigin="anonymous"></script> -->
-
-
-
+        /* === FOOTER BONITO Y ESTABLE === */
+        footer {
+            background: linear-gradient(135deg, #000000 0%, #0f0f0f 100%);
+            padding: 7vw 5% 3vw;
+            margin-top: 8vw;
+            border-top: 3px solid var(--primary);
+            position: relative;
+            box-shadow: 0 -10px 30px rgba(0, 255, 153, 0.15);
+        }
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            box-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary);
+        }
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6vw;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding-bottom: 3vw;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .footer-brand {
+            flex: 1 1 300px;
+        }
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--primary);
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+        }
+        .footer-logo img {
+            width: 48px;
+            height: 48px;
+        }
+        .footer-desc {
+            color: #bbb;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+        .footer-social {
+            display: flex;
+            gap: 1.8rem;
+        }
+        .footer-social a {
+            color: #aaa;
+            font-size: 2.2rem;
+            transition: color 0.4s ease, text-shadow 0.4s ease;
+        }
+        .footer-social a:hover {
+            color: var(--primary);
+            text-shadow: 0 0 15px var(--primary), 0 0 30px var(--primary);
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6vw;
+            flex: 2 1 500px;
+            justify-content: flex-end;
+        }
+        .links-group {
+            flex: 1 1 160px;
+        }
+        .links-group h4 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
+            font-weight: 600;
+        }
+        .links-group a {
+            display: block;
+            color: #aaa;
+            text-decoration: none;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        .links-group a:hover {
+            color: var(--primary);
+        }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2.5vw;
+            color: #777;
+            font-size: 0.95rem;
+        }
+        .footer-bottom span {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        /* RESPONSIVE - COLUMNA ÚNICA PERFECTA */
+        @media (max-width: 1200px) {
+            .footer-container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 5rem;
+            }
+            .footer-brand {
+                text-align: center;
+            }
+            .footer-logo {
+                justify-content: center;
+            }
+            .footer-social {
+                justify-content: center;
+            }
+            .footer-links {
+                flex-direction: column;
+                width: 100%;
+                gap: 4.5rem;
+                justify-content: center;
+                align-items: center;
+            }
+            .links-group {
+                flex: none;
+                text-align: center;
+                width: 100%;
+                max-width: 350px;
+            }
+            .links-group a {
+                display: inline-block;
+            }
+        }
+        @media (max-width:768px) {
+            .search-dropdown { width:320px; right:auto; left:50%; transform:translateX(-50%); }
+            .search-container { width:200px; }
+            .nav-links { gap:1.5rem; }
+            .nav-logo { font-size:1.4rem; }
+            .hero-text h1 { font-size:12vw; }
+            .hero-text h2 { font-size:4.5vw; }
+            .start-btn { font-size:4vw; padding:3vw 6vw; }
+            .hero-gallery { gap:5vw; height:70vw; }
+            .slider-column { width:35vw; }
+            .slider-track img { height:35vw; }
+            .image-container { flex:0 0 calc(33.33% - 2.5vw); aspect-ratio:1/1; }
+            .text { font-size:5vw; }
+            .section-title { font-size:10vw; margin:15vw 0 8vw; gap:2vw; }
+            .container1 { margin-bottom:12vw; }
+            .details-frame { margin-top:12vw; padding:10vw 0; }
+        }
+    </style>
 </head>
-	<body id="page-top" style="background: url('images/background1.png'); background-size: cover;">
-		<!-- Navigation-->
-		<nav class="navbar navbar-expand-lg navbar-dark top-nav" id="mainNav">
-			<div class="container">
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav-menu" aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<a class="navbar-brand js-scroll-trigger" href="/">
-          <strong>23azo-games.github.io</strong>
+<body>
+    <nav class="nav">
+        <a href="/" class="nav-logo">
+            <img src="https://files.catbox.moe/2u6mbz.png" alt="Zephiryx">
+            Gaming
         </a>
-	
-
-				<div class="navbar-collapse collapse" id="nav-menu">
-
-		
-
-				</div>
-				<div class="d-none d-lg-block">
-			
-        <ul class="navbar-nav">
-						<li class="nav-item "><a class="nav-link " href="/category/running.html">Running</a></li>
-						<li class="nav-item "><a class="nav-link " href="/category/puzzle.html">Puzzle</a></li>
-						<li class="nav-item "><a class="nav-link " href="/category/racing.html">Racing</a></li>
-						<li class="nav-item "><a class="nav-link " href="/category/skill.html">Skill</a></li>
-						<li class="nav-item "><a class="nav-link " href="/category/sports.html">Sports</a></li>
-						<li class="nav-item "><a class="nav-link " href="/category/car.html">Car</a></li>
-            
-
-  
-
-        
-
-
-            <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">More</a>
-              <ul role="menu" class="dropdown-menu">
-                <li><a class="dropdown-item" href="/category/3d.html">3D</a></li>
-      
-                <li><a class="dropdown-item" href="/category/moto.html">Moto</a></li>
-                <li><a class="dropdown-item" href="/category/stickman.html">Stickman</a></li>
-                <li><a class="dropdown-item" href="/category/adventure.html">Adventure</a></li>
-                <li><a class="dropdown-item" href="/category/multiplayer.html">Multiplayer</a></li>
-
-            </ul>
-            </li>
-
-          </ul>
-
-
-
-
-				</div>
-			</div>
-		</nav>		
-
-
-
-
-
-
-<div class="container game-wrapper">
-<div style="padding-bottom: 20px">
-<!-- ads_ngang -->
-
-
-
-
-  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8584970292834519"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-8584970292834519"
-     data-ad-slot="9075938841"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script> -->
-
-</div>
-
-
-
-
-  <div class="row">
-      <div class="col-md-9">
-          	<div class="game-container">
-          		<div class="game-content" data-id="169">
-          			<div id="allow_mobile_version"></div>			
-               <!-- 
-                <div id="mobile-play" style="display: none;">
-          				<div class="mobile-thumb-play">
-          					<img src="#">
-          				</div>
-          				<div id="mobile-play-btn">
-          					<i class="bi bi-play-circle-fill"></i>
-          				</div>
-          			</div> -->
-
-
-
-          			<div class="game-iframe-container" id="game-player">
-          				<div id="mobile-back-button" draggable="true">
-          					<i class="bi bi-x-circle-fill"></i>
-          				</div>
-          				<iframe class="game-iframe" id="game-area" src="https://23-azo.github.io/a8/tomb-of-the-mask" width="480" height="800" scrolling="none" frameborder="0" allowfullscreen></iframe>
-          			</div>
-          		</div>
-
-
-          		<div class="game-info">
-          			<div class="header-left">
-          				<h1 class="single-title">23azo Games|Tomb Of The Mask</h1>
-
-
-          			</div>
-          			<div class="header-right">
-
-
-          				<div class="b-action2">
-          		
-          					<a href="#" onclick="open_fullscreen()" class="btn btn-capsule"><i class="bi bi-arrows-fullscreen b-icon"></i>Fullscreen</a>
-          				</div>
-          			</div>
-          		</div>
-          	</div>
-
-      </div><!-- end col-9 -->
-
-<div class="col-md-3">
-    <div style="">
-<!-- ads_doc -->
-
-  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8584970292834519"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-8584970292834519"
-     data-ad-slot="8644107270"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script> -->
-
-
+        <div class="nav-links">
+            <a href="#popular">Popular</a>
+            <a href="#all">Juegos</a>
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" class="search-input" placeholder="Buscar juegos...">
+                <div class="search-dropdown" id="searchDropdown">
+                    <h3>RESULTADOS DE BÚSQUEDA</h3>
+                    <div id="resultsContainer" class="no-results">Escribe para buscar juegos...</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div id="particles-js"></div>
+    <div class="hero-section">
+        <div class="hero-text">
+            <h1>Zephir<span class="highlight">yx</span></h1>
+            <h2>+500 juegos sin bloqueos · Juega disfrazado en clase 😈</h2>
+            <a href="#popular" class="start-btn">
+                JUGAR AHORA
+                <img src="https://pizzaedition.win/joystick.png" class="icon icon-joystick">
+                <img src="https://pizzaedition.win/controller.png" class="icon icon-controller">
+                <img src="https://pizzaedition.win/laptop.png" class="icon icon-laptop">
+                <img src="https://pizzaedition.win/coin.png" class="icon icon-coin">
+            </a>
+        </div>
+        <div class="hero-gallery">
+            <div class="slider-wrapper">
+                <div class="slider-column">
+                    <div class="slider-track">
+                        <a href="https://unlockedvalle.github.io/play/1v1-lol"><img src="https://23-azo.github.io/imgs/1v1-lol.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/retro-bowl"><img src="https://23-azo.github.io/imgs/retro-bowl.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/drive-mad"><img src="https://23-azo.github.io/imgs/drive-mad.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/geometry-dash"><img src="https://23-azo.github.io/imgs/geometry-dash.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/cookie-clicker"><img src="https://23-azo.github.io/imgs/cookie-clicker.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/bitlife"><img src="https://23-azo.github.io/imgs/bitlife.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/cluster-rush"><img src="https://23-azo.github.io/imgs/cluster-rush.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/snow-rider-3d"><img src="https://23-azo.github.io/imgs/snow-rider-3d.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/subway-surfers"><img src="https://23-azo.github.io/imgs/subway-surfers.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/moto-x3m"><img src="https://23-azo.github.io/imgs/moto-x3m.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/1v1-lol"><img src="https://23-azo.github.io/imgs/1v1-lol.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/retro-bowl"><img src="https://23-azo.github.io/imgs/retro-bowl.png"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-wrapper">
+                <div class="slider-column">
+                    <div class="slider-track reverse">
+                        <a href="https://unlockedvalle.github.io/play/smash-karts"><img src="https://23-azo.github.io/imgs/smash-karts.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/basket-random"><img src="https://23-azo.github.io/imgs/basket-random.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/monkey-mart"><img src="https://23-azo.github.io/imgs/monkey-mart.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/rooftop-snipers"><img src="https://23-azo.github.io/imgs/rooftop-snipers.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/temple-run-2"><img src="https://23-azo.github.io/imgs/temple-run-2.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/ovo"><img src="https://23-azo.github.io/imgs/ovo.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/slope"><img src="https://23-azo.github.io/imgs/slope.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/among-us"><img src="https://23-azo.github.io/imgs/among-us.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/smash-karts"><img src="https://23-azo.github.io/imgs/smash-karts.png"></a>
+                        <a href="https://unlockedvalle.github.io/play/basket-random"><img src="https://23-azo.github.io/imgs/basket-random.png"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+    <div class="section-title" id="popular">POPULARES <i class="fas fa-fire"></i></div>
+    <div class="container1">
+        <div class="image-container"><a href="https://unlockedvalle.github.io/play/1v1-lol"><img src="https://23-azo.github.io/imgs/1v1-lol.png" class="image"><div class="overlay"><div class="text">1v1.LOL</div></div></a></div>
+        <div class="image-container"><a href="https://unlockedvalle.github.io/play/retro-bowl"><img src="https://23-azo.github.io/imgs/retro-bowl.png" class="image"><div class="overlay"><div class="text">Retro Bowl</div></div></a></div>
+        <div class="image-container"><a href="https://unlockedvalle.github.io/play/drive-mad"><img src="https://23-azo.github.io/imgs/drive-mad.png" class="image"><div class="overlay"><div class="text">Drive Mad</div></div></a></div>
+        <div class="image-container"><a href="https://unlockedvalle.github.io/play/geometry-dash"><img src="https://23-azo.github.io/imgs/geometry-dash.png" class="image"><div class="overlay"><div class="text">Geometry Dash</div></div></a></div>
+        <div class="image-container"><a href="https://unlockedvalle.github.io/play/cookie-clicker"><img src="https://23-azo.github.io/imgs/cookie-clicker.png" class="image"><div class="overlay"><div class="text">Cookie Clicker</div></div></a></div>
+        <div class="image-container"><a href="https://unlockedvalle.github.io/play/bitlife"><img src="https://23-azo.github.io/imgs/bitlife.png" class="image"><div class="overlay"><div class="text">BitLife</div></div></a></div>
+    </div>
+    <div class="section-title" id="all">RECOMENDADOS <i class="fas fa-star"></i></div>
+    <div class="container1">
+        <div class="image-container"><a href="https://unlockedvalle.github.io/play/cluster-rush"><img src="https://23-azo.github.io/imgs/cluster-rush.png" class="image"><div class="overlay"><div class="text">Cluster Rush</div></div></a></div>
+        <div class="image-container"><a href="https://unlockedvalle.github.io/play/snow-rider-3d"><img src="https://23-azo.github.io/imgs/snow-rider-3d.png" class="image"><div class="overlay"><div class="text">Snow Rider 3D</div></div></a></div>
+        <div class="image-container"><a href="https://unlockedvalle.github.io/play/subway-surfers"><img src="https://23-azo.github.io/imgs/subway-surfers.png" class="image"><div class="overlay"><div class="text">Subway Surfers</div></div></a></div>
+        <div class="image-container"><a href="https://unlockedvalle.github.io/play/moto-x3m"><img src="https://23-azo.github.io/imgs/moto-x3m.png" class="image"><div class="overlay"><div class="text">Moto X3M</div></div></a></div>
+        <div class="image-container"><a href="https://unlockedvalle.github.io/play/smash-karts"><img src="https://23-azo.github.io/imgs/smash-karts.png" class="image"><div class="overlay"><div class="text">Smash Karts</div></div></a></div>
+        <div class="image-container"><a href="https://unlockedvalle.github.io/play/monkey-mart"><img src="https://23-azo.github.io/imgs/monkey-mart.png" class="image"><div class="overlay"><div class="text">Monkey Mart</div></div></a></div>
+    </div>
+    <div class="details-frame">
+        <div class="detail"><div class="toph1" data-target="1847">0</div><div class="bottomh1">Usuarios esta semana</div></div>
+        <div class="detail"><div class="toph1" data-target="8923">0</div><div class="bottomh1">Partidas hoy</div></div>
+        <div class="detail"><div class="toph1" data-target="512">0</div><div class="bottomh1">Juegos jugados</div></div>
+        <div class="detail"><div class="toph1" data-target="67">0</div><div class="bottomh1">Colegios infiltrados</div></div>
+    </div>
 
+    <!-- FOOTER BONITO -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="/" class="footer-logo">
+                    <img src="https://files.catbox.moe/2u6mbz.png" alt="Zephiryx Gaming">
+                    <span>Zephiryx Gaming</span>
+                </a>
+                <p class="footer-desc">Juega sin que te pillen 😈<br>+500 juegos desbloqueados para clase y trabajo.</p>
+                
+                <div class="footer-social">
+                    <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+                </div>
+            </div>
 
+            <div class="footer-links">
+                <div class="links-group">
+                    <h4>Explora</h4>
+                    <a href="#popular">Popular</a>
+                    <a href="#all">Todos los juegos</a>
+                    <a href="/">Inicio</a>
+                </div>
+                <div class="links-group">
+                    <h4>Legal</h4>
+                    <a href="#">Términos</a>
+                    <a href="#">Privacidad</a>
+                    <a href="#">DMCA</a>
+                </div>
+                <div class="links-group">
+                    <h4>Comunidad</h4>
+                    <a href="#">Sugerir juego</a>
+                    <a href="#">Contacto</a>
+                </div>
+            </div>
+        </div>
 
+        <div class="footer-bottom">
+            <p>© 2025 Zephiryx Gaming. Todos los derechos reservados. 
+                <span>Hecho con <i class="fas fa-gamepad"></i> y neón puro</span>
+            </p>
+        </div>
+    </footer>
 
-
-
-
-
-
-
-<div class="container">
-
-
-<div class="banner-ad-wrapper"><div class="banner-ad-content" style="padding: 20px 0; text-align: center;">
-<!-- ads_ngang -->
-    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8584970292834519"
-         crossorigin="anonymous"></script>
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-8584970292834519"
-         data-ad-slot="9075938841"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script> -->
-
-</div>
-
-
-
-</div>	
-
-
-
-
-
-
-
-
-	<!-- Popular games section -->
-	<h3 class="section-title">Popular games</h3>
-	<div class="row grid-container">
-	
-<!-- 	
-
-	<div class="col-lg-4 col-md-6 grid-2">
-		<a href="/games/gameId.html">
-		<div class="game-item">
-			<div class="list-game">
-				<div class="list-thumbnail"><img src="imgLink" data-src="imgLink" class="small-thumb img-rounded lazyload" alt="gameName"></div>
-				<div class="list-info">
-					<div class="list-title">gameName</div>
-					<div class="list-category">gameCategory</div>
-		
-				</div>
-			</div>
-		</div>
-		</a>
-	</div>					
-
- -->
-
-
-
-
-
-
-
-
-  <div class="col-lg-4 col-md-6 grid-2">
-    <a href="/play/rooftop-snipers">
-    <div class="game-item">
-      <div class="list-game">
-        <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/rooftop-snipers.png" data-src="https://23-azo.github.io/imgs/rooftop-snipers.png" class="small-thumb img-rounded lazyload" alt="Rooftop Snipers"></div>
-        <div class="list-info">
-          <div class="list-title">Rooftop Snipers</div>
-          <div class="list-category">Action</div>
-    
-        </div>
-      </div>
-    </div>
-    </a>
-  </div>
-
-  <div class="col-lg-4 col-md-6 grid-2">
-    <a href="/play/idle-digging-tycoon">
-    <div class="game-item">
-      <div class="list-game">
-        <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/idle-digging-tycoon.png" data-src="https://23-azo.github.io/imgs/idle-digging-tycoon.png" class="small-thumb img-rounded lazyload" alt="Idle Digging Tycoon"></div>
-        <div class="list-info">
-          <div class="list-title">Idle Digging Tycoon</div>
-          <div class="list-category">Mouse</div>
-    
-        </div>
-      </div>
-    </div>
-    </a>
-  </div>
-
-  <div class="col-lg-4 col-md-6 grid-2">
-    <a href="/play/water-color-sort">
-    <div class="game-item">
-      <div class="list-game">
-        <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/water-color-sort.png" data-src="https://23-azo.github.io/imgs/water-color-sort.png" class="small-thumb img-rounded lazyload" alt="Water Color Sort"></div>
-        <div class="list-info">
-          <div class="list-title">Water Color Sort</div>
-          <div class="list-category">Thinking</div>
-    
-        </div>
-      </div>
-    </div>
-    </a>
-  </div>
-
-  <div class="col-lg-4 col-md-6 grid-2">
-    <a href="/play/moto-x3m-winter">
-    <div class="game-item">
-      <div class="list-game">
-        <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/moto-x3m-winter.png" data-src="https://23-azo.github.io/imgs/moto-x3m-winter.png" class="small-thumb img-rounded lazyload" alt="Moto X3m Winter"></div>
-        <div class="list-info">
-          <div class="list-title">Moto X3m Winter</div>
-          <div class="list-category">Racing</div>
-    
-        </div>
-      </div>
-    </div>
-    </a>
-  </div>
-
-  <div class="col-lg-4 col-md-6 grid-2">
-    <a href="/play/temple-run-2">
-    <div class="game-item">
-      <div class="list-game">
-        <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/temple-run-2.png" data-src="https://23-azo.github.io/imgs/temple-run-2.png" class="small-thumb img-rounded lazyload" alt="Temple Run 2"></div>
-        <div class="list-info">
-          <div class="list-title">Temple Run 2</div>
-          <div class="list-category">Action</div>
-    
-        </div>
-      </div>
-    </div>
-    </a>
-  </div>
-
-  <div class="col-lg-4 col-md-6 grid-2">
-    <a href="/play/football-masters">
-    <div class="game-item">
-      <div class="list-game">
-        <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/football-masters.png" data-src="https://23-azo.github.io/imgs/football-masters.png" class="small-thumb img-rounded lazyload" alt="Football Masters"></div>
-        <div class="list-info">
-          <div class="list-title">Football Masters</div>
-          <div class="list-category">Sports</div>
-    
-        </div>
-      </div>
-    </div>
-    </a>
-  </div>
-
-  <div class="col-lg-4 col-md-6 grid-2">
-    <a href="/play/football-legends">
-    <div class="game-item">
-      <div class="list-game">
-        <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/football-legends.png" data-src="https://23-azo.github.io/imgs/football-legends.png" class="small-thumb img-rounded lazyload" alt="Football Legends"></div>
-        <div class="list-info">
-          <div class="list-title">Football Legends</div>
-          <div class="list-category">Sports</div>
-    
-        </div>
-      </div>
-    </div>
-    </a>
-  </div>
-
-  <div class="col-lg-4 col-md-6 grid-2">
-    <a href="/play/monster-tracks">
-    <div class="game-item">
-      <div class="list-game">
-        <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/monster-tracks.png" data-src="https://23-azo.github.io/imgs/monster-tracks.png" class="small-thumb img-rounded lazyload" alt="Monster Tracks"></div>
-        <div class="list-info">
-          <div class="list-title">Monster Tracks</div>
-          <div class="list-category">Skill</div>
-    
-        </div>
-      </div>
-    </div>
-    </a>
-  </div>
-
-  <div class="col-lg-4 col-md-6 grid-2">
-    <a href="/play/8-ball-pool">
-    <div class="game-item">
-      <div class="list-game">
-        <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/8-ball-pool.png" data-src="https://23-azo.github.io/imgs/8-ball-pool.png" class="small-thumb img-rounded lazyload" alt="8 Ball Pool"></div>
-        <div class="list-info">
-          <div class="list-title">8 Ball Pool</div>
-          <div class="list-category">Sports</div>
-    
-        </div>
-      </div>
-    </div>
-    </a>
-  </div>
-
-  <div class="col-lg-4 col-md-6 grid-2">
-    <a href="/play/stickman-bike">
-    <div class="game-item">
-      <div class="list-game">
-        <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/stickman-bike.png" data-src="https://23-azo.github.io/imgs/stickman-bike.png" class="small-thumb img-rounded lazyload" alt="Stickman Bike"></div>
-        <div class="list-info">
-          <div class="list-title">Stickman Bike</div>
-          <div class="list-category">Sports</div>
-    
-        </div>
-      </div>
-    </div>
-    </a>
-  </div>
-
-  <div class="col-lg-4 col-md-6 grid-2">
-    <a href="/play/jumping-shell">
-    <div class="game-item">
-      <div class="list-game">
-        <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/jumping-shell.png" data-src="https://23-azo.github.io/imgs/jumping-shell.png" class="small-thumb img-rounded lazyload" alt="Jumping Shell"></div>
-        <div class="list-info">
-          <div class="list-title">Jumping Shell</div>
-          <div class="list-category">Thinking</div>
-    
-        </div>
-      </div>
-    </div>
-    </a>
-  </div>
-
-  <div class="col-lg-4 col-md-6 grid-2">
-    <a href="/play/master-chess">
-    <div class="game-item">
-      <div class="list-game">
-        <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/master-chess.png" data-src="https://23-azo.github.io/imgs/master-chess.png" class="small-thumb img-rounded lazyload" alt="Master Chess"></div>
-        <div class="list-info">
-          <div class="list-title">Master Chess</div>
-          <div class="list-category">Thinking</div>
-    
-        </div>
-      </div>
-    </div>
-    </a>
-  </div>
-
-
-
-
-
-
-
-	<div class="banner-ad-wrapper"><div class="banner-ad-content" style="padding: 20px 0; text-align: center;">
-		<!-- ads_ngang -->
-
-
-		</div>
-
-
-
-	</div>	
-
-
-
-
-
-
-
-</div> <!-- end Poplular -->
-
-
-
-	<!-- Random games section -->
-	<h3 class="section-title">You may like</h3>
-	<div class="row grid-container">
-					
-
-
-
-
-
-
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/big-shot-boxing.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/big-shot-boxing.png" data-src="https://23-azo.github.io/imgs/big-shot-boxing.png" class="lazyload" alt="Big Shot Boxing"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/merge-round-racers.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/merge-round-racers.png" data-src="https://23-azo.github.io/imgs/merge-round-racers.png" class="lazyload" alt="Merge Round Racers"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/who-is.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/who-is.png" data-src="https://23-azo.github.io/imgs/who-is.png" class="lazyload" alt="Who Is"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/temple-of-boom.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/temple-of-boom.png" data-src="https://23-azo.github.io/imgs/temple-of-boom.png" class="lazyload" alt="Temple Of Boom"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/n-gon.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/n-gon.png" data-src="https://23-azo.github.io/imgs/n-gon.png" class="lazyload" alt="N Gon"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/master-chess.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/master-chess.png" data-src="https://23-azo.github.io/imgs/master-chess.png" class="lazyload" alt="Master Chess"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/soccer-skills-champions-league.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/soccer-skills-champions-league.png" data-src="https://23-azo.github.io/imgs/soccer-skills-champions-league.png" class="lazyload" alt="Soccer Skills Champions League"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/tag.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/tag.png" data-src="https://23-azo.github.io/imgs/tag.png" class="lazyload" alt="Tag"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/escaping-the-prison.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/escaping-the-prison.png" data-src="https://23-azo.github.io/imgs/escaping-the-prison.png" class="lazyload" alt="Escaping The Prison"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/city-car-driving-stunt-master.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/city-car-driving-stunt-master.png" data-src="https://23-azo.github.io/imgs/city-car-driving-stunt-master.png" class="lazyload" alt="City Car Driving: Stunt Master"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/smash-karts.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/smash-karts.png" data-src="https://23-azo.github.io/imgs/smash-karts.png" class="lazyload" alt="Smash Karts"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/tiger-simulator-3d.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/tiger-simulator-3d.png" data-src="https://23-azo.github.io/imgs/tiger-simulator-3d.png" class="lazyload" alt="Tiger Simulator 3d"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/chicken-merge.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/chicken-merge.png" data-src="https://23-azo.github.io/imgs/chicken-merge.png" class="lazyload" alt="Chicken Merge"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/drive-mad.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/drive-mad.png" data-src="https://23-azo.github.io/imgs/drive-mad.png" class="lazyload" alt="Drive Mad"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/monster-tracks.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/monster-tracks.png" data-src="https://23-azo.github.io/imgs/monster-tracks.png" class="lazyload" alt="Monster Tracks"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/penalty-shooters-2.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/penalty-shooters-2.png" data-src="https://23-azo.github.io/imgs/penalty-shooters-2.png" class="lazyload" alt="Penalty Shooters 2"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/stickman-bike.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/stickman-bike.png" data-src="https://23-azo.github.io/imgs/stickman-bike.png" class="lazyload" alt="Stickman Bike"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/subway-surfers-newyork.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/subway-surfers-newyork.png" data-src="https://23-azo.github.io/imgs/subway-surfers-newyork.png" class="lazyload" alt="Subway Surfers Newyork"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/sausage-flip.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/sausage-flip.png" data-src="https://23-azo.github.io/imgs/sausage-flip.png" class="lazyload" alt="Sausage Flip"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/jumping-shell.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/jumping-shell.png" data-src="https://23-azo.github.io/imgs/jumping-shell.png" class="lazyload" alt="Jumping Shell"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/pop-it-master.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/pop-it-master.png" data-src="https://23-azo.github.io/imgs/pop-it-master.png" class="lazyload" alt="Pop It Master"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/soccer-skills-world-cup.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/soccer-skills-world-cup.png" data-src="https://23-azo.github.io/imgs/soccer-skills-world-cup.png" class="lazyload" alt="Soccer Skills World Cup"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/getaway-shootout.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/getaway-shootout.png" data-src="https://23-azo.github.io/imgs/getaway-shootout.png" class="lazyload" alt="Getaway Shootout"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/top-speed-racing-3d.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/top-speed-racing-3d.png" data-src="https://23-azo.github.io/imgs/top-speed-racing-3d.png" class="lazyload" alt="Top Speed Racing 3d"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/dreadhead-parkour.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/dreadhead-parkour.png" data-src="https://23-azo.github.io/imgs/dreadhead-parkour.png" class="lazyload" alt="Dreadhead Parkour"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/red-ball-4.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/red-ball-4.png" data-src="https://23-azo.github.io/imgs/red-ball-4.png" class="lazyload" alt="Red Ball 4"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/moto-x3m-2.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/moto-x3m-2.png" data-src="https://23-azo.github.io/imgs/moto-x3m-2.png" class="lazyload" alt="Moto X3m 2"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/stacktris.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/stacktris.png" data-src="https://23-azo.github.io/imgs/stacktris.png" class="lazyload" alt="Stacktris"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/tiny-fishing.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/tiny-fishing.png" data-src="https://23-azo.github.io/imgs/tiny-fishing.png" class="lazyload" alt="Tiny Fishing"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/stickman-climb-2.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/stickman-climb-2.png" data-src="https://23-azo.github.io/imgs/stickman-climb-2.png" class="lazyload" alt="Stickman Climb 2"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/football-legends.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/football-legends.png" data-src="https://23-azo.github.io/imgs/football-legends.png" class="lazyload" alt="Football Legends"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/stickman-hook.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/stickman-hook.png" data-src="https://23-azo.github.io/imgs/stickman-hook.png" class="lazyload" alt="Stickman Hook"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/top-speed-3d.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/top-speed-3d.png" data-src="https://23-azo.github.io/imgs/top-speed-3d.png" class="lazyload" alt="Top Speed 3d"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/eugenes-life.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/eugenes-life.png" data-src="https://23-azo.github.io/imgs/eugenes-life.png" class="lazyload" alt="Eugenes Life"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/moto-x3m-winter.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/moto-x3m-winter.png" data-src="https://23-azo.github.io/imgs/moto-x3m-winter.png" class="lazyload" alt="Moto X3m Winter"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/the-impossible-quiz.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/the-impossible-quiz.png" data-src="https://23-azo.github.io/imgs/the-impossible-quiz.png" class="lazyload" alt="The Impossible Quiz"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/temple-run-2.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/temple-run-2.png" data-src="https://23-azo.github.io/imgs/temple-run-2.png" class="lazyload" alt="Temple Run 2"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/water-color-sort.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/water-color-sort.png" data-src="https://23-azo.github.io/imgs/water-color-sort.png" class="lazyload" alt="Water Color Sort"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/house-of-hazards.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/house-of-hazards.png" data-src="https://23-azo.github.io/imgs/house-of-hazards.png" class="lazyload" alt="House Of Hazards"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/stick-merge.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/stick-merge.png" data-src="https://23-azo.github.io/imgs/stick-merge.png" class="lazyload" alt="Stick Merge"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/we-become-what-we-behold.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/we-become-what-we-behold.png" data-src="https://23-azo.github.io/imgs/we-become-what-we-behold.png" class="lazyload" alt="We Become What We Behold"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/masked-forces.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/masked-forces.png" data-src="https://23-azo.github.io/imgs/masked-forces.png" class="lazyload" alt="Masked Forces"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/stack-ball.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/stack-ball.png" data-src="https://23-azo.github.io/imgs/stack-ball.png" class="lazyload" alt="Stack Ball"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/merge-cyber-racers.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/merge-cyber-racers.png" data-src="https://23-azo.github.io/imgs/merge-cyber-racers.png" class="lazyload" alt="Merge Cyber Racers"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/g-switch-3.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/g-switch-3.png" data-src="https://23-azo.github.io/imgs/g-switch-3.png" class="lazyload" alt="G Switch 3"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/swingo.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/swingo.png" data-src="https://23-azo.github.io/imgs/swingo.png" class="lazyload" alt="Swingo"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/battle-wheels.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/battle-wheels.png" data-src="https://23-azo.github.io/imgs/battle-wheels.png" class="lazyload" alt="Battle Wheels"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/blumgi-slime.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/blumgi-slime.png" data-src="https://23-azo.github.io/imgs/blumgi-slime.png" class="lazyload" alt="Blumgi Slime"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/idle-digging-tycoon.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/idle-digging-tycoon.png" data-src="https://23-azo.github.io/imgs/idle-digging-tycoon.png" class="lazyload" alt="Idle Digging Tycoon"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/football-masters.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/football-masters.png" data-src="https://23-azo.github.io/imgs/football-masters.png" class="lazyload" alt="Football Masters"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/moto-x3m.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/moto-x3m.png" data-src="https://23-azo.github.io/imgs/moto-x3m.png" class="lazyload" alt="Moto X3m"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/rocket-soccer-derby.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/rocket-soccer-derby.png" data-src="https://23-azo.github.io/imgs/rocket-soccer-derby.png" class="lazyload" alt="Rocket Soccer Derby"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/basketball-stars.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/basketball-stars.png" data-src="https://23-azo.github.io/imgs/basketball-stars.png" class="lazyload" alt="Basketball Stars"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/8-ball-pool.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/8-ball-pool.png" data-src="https://23-azo.github.io/imgs/8-ball-pool.png" class="lazyload" alt="8 Ball Pool"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/stack.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/stack.png" data-src="https://23-azo.github.io/imgs/stack.png" class="lazyload" alt="Stack"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/drift-hunters.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/drift-hunters.png" data-src="https://23-azo.github.io/imgs/drift-hunters.png" class="lazyload" alt="Drift Hunters"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/idle-ants.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/idle-ants.png" data-src="https://23-azo.github.io/imgs/idle-ants.png" class="lazyload" alt="Idle Ants"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/gold-digger-frvr.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/gold-digger-frvr.png" data-src="https://23-azo.github.io/imgs/gold-digger-frvr.png" class="lazyload" alt="Gold Digger Frvr"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-<div class="col-lg-2 col-md-4 col-6 grid-3">
-  <a href="/play/raft-wars.html">
-  <div class="game-item">
-    <div class="list-game">
-      <div class="list-thumbnail"><img src="https://23-azo.github.io/imgs/raft-wars.png" data-src="https://23-azo.github.io/imgs/raft-wars.png" class="lazyload" alt="Raft Wars"></div>
-    </div>
-  </div>
-  </a>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-</div> <!-- end You May Like -->
-	
-	<div class="banner-ad-wrapper">
-		<div class="banner-ad-content" style="padding: 20px 0; text-align: center;">
-			<!-- Ads_ngang -->
-     <!--  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8584970292834519"
-     crossorigin="anonymous"></script>
-  <ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-8584970292834519"
-     data-ad-slot="9075938841"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script> -->
-		
-    </div>
-	</div>	
-
-
-
-
-
-</div> <!-- end container -->
-
-
-
-
-
-
-
-
-
-	<div class="footer-copyright py-4">
-		<div class="container">
-			23azo-games.github.io			<span class="dsb-panel">
-				<a href="term.html">Term</a> - <a href="dmca.html">DMCA</a> - <a href="policy.html">Policy</a>			</span>
-		</div>
-	</div>
-	<script type="text/javascript" src="js/jquery-3.6.2.min.js"></script>
-	<script type="text/javascript" src="js/lazysizes.min.js"></script>
-	<script type="text/javascript" src="js/popper.min.js"></script>
-	<script type="text/javascript" src="js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="js/script.js"></script>
-	<script type="text/javascript" src="js/custom.js"></script>
-	  </body>
+        particlesJS("particles-js", {
+            particles: { number: { value: 130 }, color: { value: "#00ff99" }, opacity: { value: 0.6, random: true }, size: { value: 3, random: true }, line_linked: { enable: true, distance: 150, color: "#00ff99", opacity: 0.4, width: 1 }, move: { enable: true, speed: 3 } },
+            interactivity: { events: { onhover: { enable: true, mode: "repulse" } } }
+        });
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target.querySelector('.toph1');
+                    const target = +counter.dataset.target;
+                    let count = 0;
+                    const inc = target / 200;
+                    const update = () => {
+                        if (count < target) {
+                            count += inc;
+                            counter.innerText = Math.ceil(count).toLocaleString();
+                            setTimeout(update, 10);
+                        } else counter.innerText = target.toLocaleString();
+                    };
+                    update();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('.detail').forEach(d => observer.observe(d));
+        const games = [
+            {file: "10-minutes-till-dawn.html", title: "10 Minutes Till Dawn"},
+            {file: "11-11.html", title: "11-11"},
+            {file: "12-minibattles.html", title: "12 Minibattles"},
+            {file: "1v1-lol.html", title: "1v1.LOL"},
+            {file: "2048-multitask.html", title: "2048 Multitask"},
+            {file: "2048.html", title: "2048"},
+            {file: "3d-car-simulator.html", title: "3D Car Simulator"},
+            {file: "3d-moto-simulator-2.html", title: "3D Moto Simulator 2"},
+            {file: "4th-and-goal-2022.html", title: "4th and Goal 2022"},
+            {file: "4x4-drive-offroad.html", title: "4x4 Drive Offroad"},
+            {file: "8-ball-pool.html", title: "8 Ball Pool"},
+            {file: "a-dance-of-fire-and-ice.html", title: "A Dance of Fire and Ice"},
+            {file: "a-small-world-cup.html", title: "A Small World Cup"},
+            {file: "adventure-drivers.html", title: "Adventure Drivers"},
+            {file: "age-of-war.html", title: "Age of War"},
+            {file: "air-hockey-championship-deluxe.html", title: "Air Hockey Championship Deluxe"},
+            {file: "among-us.html", title: "Among Us"},
+            {file: "ape-sling.html", title: "Ape Sling"},
+            {file: "aqua-thrills.html", title: "Aqua Thrills"},
+            {file: "archery-world-tour.html", title: "Archery World Tour"},
+            {file: "arithmetica.html", title: "Arithmetica"},
+            {file: "athletics-hero.html", title: "Athletics Hero"},
+            {file: "awesome-tanks-2.html", title: "Awesome Tanks 2"},
+            {file: "awesome-tanks.html", title: "Awesome Tanks"},
+            {file: "b-cubed.html", title: "B Cubed"},
+            {file: "bacon-may-die.html", title: "Bacon May Die"},
+            {file: "bad-ice-cream-2.html", title: "Bad Ice Cream 2"},
+            {file: "bad-ice-cream-3.html", title: "Bad Ice Cream 3"},
+            {file: "bad-ice-cream.html", title: "Bad Ice Cream"},
+            {file: "basket-and-ball.html", title: "Basket and Ball"},
+            {file: "basket-bros.html", title: "Basket Bros"},
+            {file: "basket-champs.html", title: "Basket Champs"},
+            {file: "basket-random.html", title: "Basket Random"},
+            {file: "basket-swooshes.html", title: "Basket Swooshes"},
+            {file: "basketball-legends.html", title: "Basketball Legends"},
+            {file: "basketball-line.html", title: "Basketball Line"},
+            {file: "basketball-stars.html", title: "Basketball Stars"},
+            {file: "battle-wheels.html", title: "Battle Wheels"},
+            {file: "bearsus.html", title: "Bearsus"},
+            {file: "big-shot-boxing.html", title: "Big Shot Boxing"},
+            {file: "big-tall-small.html", title: "Big Tall Small"},
+            {file: "bike-trials-offroad-1.html", title: "Bike Trials Offroad 1"},
+            {file: "bike-trials-winter-1.html", title: "Bike Trials Winter 1"},
+            {file: "bike-trials-winter-2.html", title: "Bike Trials Winter 2"},
+            {file: "bitlife.html", title: "BitLife"},
+            {file: "block-the-pig.html", title: "Block the Pig"},
+            {file: "blocky-cars.html", title: "Blocky Cars"},
+            {file: "blocky-trials.html", title: "Blocky Trials"},
+            {file: "bloons-tower-defense-1.html", title: "Bloons Tower Defense 1"},
+            {file: "bloxorz.html", title: "Bloxorz"},
+            {file: "blumgi-ball.html", title: "Blumgi Ball"},
+            {file: "blumgi-castle.html", title: "Blumgi Castle"},
+            {file: "blumgi-rocket.html", title: "Blumgi Rocket"},
+            {file: "blumgi-slime.html", title: "Blumgi Slime"},
+            {file: "bob-the-robber-4.html", title: "Bob the Robber 4"},
+            {file: "bomb-it-7.html", title: "Bomb It 7"},
+            {file: "bowling-stars.html", title: "Bowling Stars"},
+            {file: "boxing-physics-2.html", title: "Boxing Physics 2"},
+            {file: "boxing-random.html", title: "Boxing Random"},
+            {file: "brain-for-monster-truck.html", title: "Brain for Monster Truck"},
+            {file: "brain-test-2-tricky-stories.html", title: "Brain Test 2 Tricky Stories"},
+            {file: "brain-test-3-tricky-quests.html", title: "Brain Test 3 Tricky Quests"},
+            {file: "brain-test-tricky-puzzles.html", title: "Brain Test Tricky Puzzles"},
+            {file: "breaking-the-bank.html", title: "Breaking the Bank"},
+            {file: "bubble-shooter.html", title: "Bubble Shooter"},
+            {file: "bubble-trouble-3.html", title: "Bubble Trouble 3"},
+            {file: "bubble-trouble.html", title: "Bubble Trouble"},
+            {file: "bullet-force.html", title: "Bullet Force"},
+            {file: "bumper-cars-soccer.html", title: "Bumper Cars Soccer"},
+            {file: "bunny-hop.html", title: "Bunny Hop"},
+            {file: "burger-bounty.html", title: "Burger Bounty"},
+            {file: "burnin-rubber-5-xs.html", title: "Burnin Rubber 5 XS"},
+            {file: "burnin-rubber-crash-n-burn.html", title: "Burnin Rubber Crash n Burn"},
+            {file: "burnout-drift-seaport-max.html", title: "Burnout Drift Seaport Max"},
+            {file: "burrito-bison.html", title: "Burrito Bison"},
+            {file: "candy-jump.html", title: "Candy Jump"},
+            {file: "cannon-strike.html", title: "Cannon Strike"},
+            {file: "car-climb-racing.html", title: "Car Climb Racing"},
+            {file: "car-rush.html", title: "Car Rush"},
+            {file: "cars-thief-tank-edition.html", title: "Cars Thief Tank Edition"},
+            {file: "cars-thief.html", title: "Cars Thief"},
+            {file: "cat-gunner-super-zombie-shoot.html", title: "Cat Gunner Super Zombie Shoot"},
+            {file: "cat-trap.html", title: "Cat Trap"},
+            {file: "cats.html", title: "Cats"},
+            {file: "chicken-merge.html", title: "Chicken Merge"},
+            {file: "chrome-dino.html", title: "Chrome Dino"},
+            {file: "city-bike-stunt-2.html", title: "City Bike Stunt 2"},
+            {file: "city-car-driving-stunt-master.html", title: "City Car Driving Stunt Master"},
+            {file: "city-rider.html", title: "City Rider"},
+            {file: "cluster-rush.html", title: "Cluster Rush"},
+            {file: "coffee-shop.html", title: "Coffee Shop"},
+            {file: "color-switch.html", title: "Color Switch"},
+            {file: "color-tunnel-2.html", title: "Color Tunnel 2"},
+            {file: "cookie-clicker.html", title: "Cookie Clicker"},
+            {file: "crazy-cars.html", title: "Crazy Cars"},
+            {file: "crazy-tunnel-3d.html", title: "Crazy Tunnel 3D"},
+            {file: "cricket-world-cup.html", title: "Cricket World Cup"},
+            {file: "crossy-road.html", title: "Crossy Road"},
+            {file: "cubes-king.html", title: "Cubes King"},
+            {file: "cubito-mayhem.html", title: "Cubito Mayhem"},
+            {file: "curve-ball-3d.html", title: "Curve Ball 3D"},
+            {file: "cut-the-rope-holiday.html", title: "Cut the Rope Holiday"},
+            {file: "cut-the-rope-time-travel.html", title: "Cut the Rope Time Travel"},
+            {file: "cut-the-rope.html", title: "Cut the Rope"},
+            {file: "cyber-cars-punk-racing.html", title: "Cyber Cars Punk Racing"},
+            {file: "death-chase.html", title: "Death Chase"},
+            {file: "death-run-3d.html", title: "Death Run 3D"},
+            {file: "deepest-sword.html", title: "Deepest Sword"},
+            {file: "deer-simulator.html", title: "Deer Simulator"},
+            {file: "demolition-derby-crash-racing.html", title: "Demolition Derby Crash Racing"},
+            {file: "detective-loupe-puzzle.html", title: "Detective Loupe Puzzle"},
+            {file: "dinosaur-game.html", title: "Dinosaur Game"},
+            {file: "dog-simulator-3d.html", title: "Dog Simulator 3D"},
+            {file: "doge-miner.html", title: "Doge Miner"},
+            {file: "doodle-champion-island.html", title: "Doodle Champion Island"},
+            {file: "doodle-jump.html", title: "Doodle Jump"},
+            {file: "draw-the-hill.html", title: "Draw the Hill"},
+            {file: "dreadhead-parkour.html", title: "Dreadhead Parkour"},
+            {file: "drift-boss.html", title: "Drift Boss"},
+            {file: "drift-hunters.html", title: "Drift Hunters"},
+            {file: "drive-mad.html", title: "Drive Mad"},
+            {file: "drunken-duel.html", title: "Drunken Duel"},
+            {file: "duck-life-2-world-champion.html", title: "Duck Life 2 World Champion"},
+            {file: "duck-life-3-evolution.html", title: "Duck Life 3 Evolution"},
+            {file: "duck-life-4.html", title: "Duck Life 4"},
+            {file: "duck-life.html", title: "Duck Life"},
+            {file: "dunkbrush.html", title: "Dunkbrush"},
+            {file: "dunkers.html", title: "Dunkers"},
+            {file: "earn-to-die.html", title: "Earn to Die"},
+            {file: "eggy-car.html", title: "Eggy Car"},
+            {file: "elastic-man.html", title: "Elastic Man"},
+            {file: "electron-dash.html", title: "Electron Dash"},
+            {file: "eliza-mall-mania.html", title: "Eliza Mall Mania"},
+            {file: "energy.html", title: "Energy"},
+            {file: "escaping-the-prison.html", title: "Escaping the Prison"},
+            {file: "eugenes-life.html", title: "Eugene's Life"},
+            {file: "evo-city-driving.html", title: "Evo City Driving"},
+            {file: "extreme-car-driving-simulator.html", title: "Extreme Car Driving Simulator"},
+            {file: "extreme-car-parking.html", title: "Extreme Car Parking"},
+            {file: "factory-balls-forever.html", title: "Factory Balls Forever"},
+            {file: "fairy-dressup.html", title: "Fairy Dressup"},
+            {file: "fancy-pants-2.html", title: "Fancy Pants 2"},
+            {file: "fancy-pants-3.html", title: "Fancy Pants 3"},
+            {file: "fancy-pants.html", title: "Fancy Pants"},
+            {file: "fireboy-and-water-girl.html", title: "Fireboy and Water Girl"},
+            {file: "five-nights-at-freddys-2.html", title: "Five Nights at Freddy's 2"},
+            {file: "five-nights-at-freddys-3.html", title: "Five Nights at Freddy's 3"},
+            {file: "five-nights-at-freddys.html", title: "Five Nights at Freddy's"},
+            {file: "flappy-bird-origin.html", title: "Flappy Bird Origin"},
+            {file: "flappy-bird.html", title: "Flappy Bird"},
+            {file: "fleeing-the-complex.html", title: "Fleeing the Complex"},
+            {file: "flying-car-simulator.html", title: "Flying Car Simulator"},
+            {file: "foot-chinko.html", title: "Foot Chinko"},
+            {file: "football-legends.html", title: "Football Legends"},
+            {file: "football-masters.html", title: "Football Masters"},
+            {file: "fortnite.html", title: "Fortnite"},
+            {file: "fortz.html", title: "Fortz"},
+            {file: "free-kick-shooter.html", title: "Free Kick Shooter"},
+            {file: "free-the-key.html", title: "Free the Key"},
+            {file: "friday-night-funkin.html", title: "Friday Night Funkin"},
+            {file: "funny-shooter-2.html", title: "Funny Shooter 2"},
+            {file: "furious-racing-3d.html", title: "Furious Racing 3D"},
+            {file: "g-switch-3.html", title: "G Switch 3"},
+            {file: "geometry-dash.html", title: "Geometry Dash"},
+            {file: "getaway-shootout.html", title: "Getaway Shootout"},
+            {file: "getting-over-it.html", title: "Getting Over It"},
+            {file: "go-kart-go-ultra.html", title: "Go Kart Go Ultra"},
+            {file: "gobble.html", title: "Gobble"},
+            {file: "gold-digger-frvr.html", title: "Gold Digger FRVR"},
+            {file: "golf-champions.html", title: "Golf Champions"},
+            {file: "golfinity.html", title: "Golfinity"},
+            {file: "google-feud.html", title: "Google Feud"},
+            {file: "google-snake.html", title: "Google Snake"},
+            {file: "grand-prix-hero.html", title: "Grand Prix Hero"},
+            {file: "gravity-soccer.html", title: "Gravity Soccer"},
+            {file: "grindcraft-remastered.html", title: "Grindcraft Remastered"},
+            {file: "grindcraft.html", title: "Grindcraft"},
+            {file: "gun-mayhem-2.html", title: "Gun Mayhem 2"},
+            {file: "gun-mayhem-3.html", title: "Gun Mayhem 3"},
+            {file: "gun-mayhem.html", title: "Gun Mayhem"},
+            {file: "gunspin.html", title: "Gunspin"},
+            {file: "hammer-2-reloaded.html", title: "Hammer 2 Reloaded"},
+            {file: "happy-room.html", title: "Happy Room"},
+            {file: "head-soccer-2023.html", title: "Head Soccer 2023"},
+            {file: "heads-arena-soccer-all-stars.html", title: "Heads Arena Soccer All Stars"},
+            {file: "heart-star-html5.html", title: "Heart Star"},
+            {file: "hextris.html", title: "Hextris"},
+            {file: "highway-racer-3d.html", title: "Highway Racer 3D"},
+            {file: "highway-rider-extreme.html", title: "Highway Rider Extreme"},
+            {file: "highway-traffic.html", title: "Highway Traffic"},
+            {file: "horse-shoeing.html", title: "Horse Shoeing"},
+            {file: "horse-simulator-3d.html", title: "Horse Simulator 3D"},
+            {file: "house-of-hazards.html", title: "House of Hazards"},
+            {file: "hover-racer-drive.html", title: "Hover Racer Drive"},
+            {file: "hover-racer.html", title: "Hover Racer"},
+            {file: "icy-purple-head-3.html", title: "Icy Purple Head 3"},
+            {file: "idle-ants.html", title: "Idle Ants"},
+            {file: "idle-breakout.html", title: "Idle Breakout"},
+            {file: "idle-digging-tycoon.html", title: "Idle Digging Tycoon"},
+            {file: "idle-lumber-inc.html", title: "Idle Lumber Inc"},
+            {file: "idle-miner.html", title: "Idle Miner"},
+            {file: "idle-mining-empire.html", title: "Idle Mining Empire"},
+            {file: "idle-startup-tycoon.html", title: "Idle Startup Tycoon"},
+            {file: "impossible-monster-truck-race.html", title: "Impossible Monster Truck Race"},
+            {file: "impossible-tic-tac-toe.html", title: "Impossible Tic Tac Toe"},
+            {file: "infinity-loop.html", title: "Infinity Loop"},
+            {file: "iron-snout.html", title: "Iron Snout"},
+            {file: "jelly-truck.html", title: "Jelly Truck"},
+            {file: "jet-boy.html", title: "Jet Boy"},
+            {file: "jetpack-joyride.html", title: "Jetpack Joyride"},
+            {file: "jollyworld.html", title: "Jollyworld"},
+            {file: "jumping-shell.html", title: "Jumping Shell"},
+            {file: "kart-race-3d.html", title: "Kart Race 3D"},
+            {file: "kawaii-dressup.html", title: "Kawaii Dressup"},
+            {file: "kix-dream-soccer.html", title: "Kix Dream Soccer"},
+            {file: "leader-strike.html", title: "Leader Strike"},
+            {file: "lemonade-stand.html", title: "Lemonade Stand"},
+            {file: "life-the-game.html", title: "Life the Game"},
+            {file: "linebacker-alley-2.html", title: "Linebacker Alley 2"},
+            {file: "ludo-multiplayer.html", title: "Ludo Multiplayer"},
+            {file: "mad-day.html", title: "Mad Day"},
+            {file: "mad-truck-challenge-special.html", title: "Mad Truck Challenge Special"},
+            {file: "madalin-stunt-cars-2.html", title: "Madalin Stunt Cars 2"},
+            {file: "madalin-stunt-cars-3.html", title: "Madalin Stunt Cars 3"},
+            {file: "marble-dash.html", title: "Marble Dash"},
+            {file: "mario.html", title: "Mario"},
+            {file: "masked-forces.html", title: "Masked Forces"},
+            {file: "master-chess.html", title: "Master Chess"},
+            {file: "maze-path-of-light.html", title: "Maze Path of Light"},
+            {file: "maze-planet-3d.html", title: "Maze Planet 3D"},
+            {file: "merge-cakes.html", title: "Merge Cakes"},
+            {file: "merge-cyber-racers.html", title: "Merge Cyber Racers"},
+            {file: "merge-harvest.html", title: "Merge Harvest"},
+            {file: "merge-round-racers.html", title: "Merge Round Racers"},
+            {file: "minecraft-1.5.2.html", title: "Minecraft 1.5.2"},
+            {file: "minecraft-1.8.8.html", title: "Minecraft 1.8.8"},
+            {file: "minecraft-builder.html", title: "Minecraft Builder"},
+            {file: "minecraft-classic.html", title: "Minecraft Classic"},
+            {file: "minesweeper.html", title: "Minesweeper"},
+            {file: "minibattles.html", title: "Minibattles"},
+            {file: "mob-city.html", title: "Mob City"},
+            {file: "monkey-mart.html", title: "Monkey Mart"},
+            {file: "monster-tracks.html", title: "Monster Tracks"},
+            {file: "monsters-wheels-special.html", title: "Monsters Wheels Special"},
+            {file: "mosaic-puzzle-art.html", title: "Mosaic Puzzle Art"},
+            {file: "moto-maniac-2.html", title: "Moto Maniac 2"},
+            {file: "moto-maniac.html", title: "Moto Maniac"},
+            {file: "moto-road-rash-3d.html", title: "Moto Road Rash 3D"},
+            {file: "moto-trial-racing-2.html", title: "Moto Trial Racing 2"},
+            {file: "moto-x3m-2.html", title: "Moto X3M 2"},
+            {file: "moto-x3m-pool-party.html", title: "Moto X3M Pool Party"},
+            {file: "moto-x3m-spooky-land.html", title: "Moto X3M Spooky Land"},
+            {file: "moto-x3m-winter.html", title: "Moto X3M Winter"},
+            {file: "moto-x3m.html", title: "Moto X3M"},
+            {file: "murder.html", title: "Murder"},
+            {file: "my-pony-my-little-race.html", title: "My Pony My Little Race"},
+            {file: "n-gon.html", title: "N Gon"},
+            {file: "neon-war.html", title: "Neon War"},
+            {file: "noob-drive.html", title: "Noob Drive"},
+            {file: "offroader-v5.html", title: "Offroader V5"},
+            {file: "onion-boy.html", title: "Onion Boy"},
+            {file: "orbital-survival.html", title: "Orbital Survival"},
+            {file: "ovo.html", title: "Ovo"},
+            {file: "pac-man.html", title: "Pac Man"},
+            {file: "panda-bubble-shooter.html", title: "Panda Bubble Shooter"},
+            {file: "panda-simulator-3d.html", title: "Panda Simulator 3D"},
+            {file: "paper-fighter-3d.html", title: "Paper Fighter 3D"},
+            {file: "paper-io-2.html", title: "Paper.io 2"},
+            {file: "parking-fury-2.html", title: "Parking Fury 2"},
+            {file: "parking-fury-3d-bounty-hunter.html", title: "Parking Fury 3D Bounty Hunter"},
+            {file: "parking-fury-3d-night-thief.html", title: "Parking Fury 3D Night Thief"},
+            {file: "parking-fury.html", title: "Parking Fury"},
+            {file: "parkour-block-3d.html", title: "Parkour Block 3D"},
+            {file: "penalty-kick-online.html", title: "Penalty Kick Online"},
+            {file: "penalty-shooters-2.html", title: "Penalty Shooters 2"},
+            {file: "perfect-peel.html", title: "Perfect Peel"},
+            {file: "ping-pong-html5.html", title: "Ping Pong"},
+            {file: "pixel-gun-survival.html", title: "Pixel Gun Survival"},
+            {file: "pixwars-2.html", title: "Pixwars 2"},
+            {file: "plactions.html", title: "Plactions"},
+            {file: "pool-club.html", title: "Pool Club"},
+            {file: "poor-bunny.html", title: "Poor Bunny"},
+            {file: "pop-it-master.html", title: "Pop It Master"},
+            {file: "power-badminton.html", title: "Power Badminton"},
+            {file: "pre-civilization-bronze-age.html", title: "Pre Civilization Bronze Age"},
+            {file: "precision-client.html", title: "Precision Client"},
+            {file: "puppet-master.html", title: "Puppet Master"},
+            {file: "rabbit-samurai.html", title: "Rabbit Samurai"},
+            {file: "raft-wars-2.html", title: "Raft Wars 2"},
+            {file: "raft-wars-multiplayer.html", title: "Raft Wars Multiplayer"},
+            {file: "raft-wars.html", title: "Raft Wars"},
+            {file: "rally-champion.html", title: "Rally Champion"},
+            {file: "real-cars-in-city.html", title: "Real Cars in City"},
+            {file: "real-city-driving-2.html", title: "Real City Driving 2"},
+            {file: "real-simulator-monster-truck.html", title: "Real Simulator Monster Truck"},
+            {file: "recoil.html", title: "Recoil"},
+            {file: "red-ball-4.html", title: "Red Ball 4"},
+            {file: "retro-bowl.html", title: "Retro Bowl"},
+            {file: "riddle-school.html", title: "Riddle School"},
+            {file: "rio-rex.html", title: "Rio Rex"},
+            {file: "rocket-pult.html", title: "Rocket Pult"},
+            {file: "rocket-soccer-derby.html", title: "Rocket Soccer Derby"},
+            {file: "rolling-sky.html", title: "Rolling Sky"},
+            {file: "rolly-vortex.html", title: "Rolly Vortex"},
+            {file: "roly-poly-monsters.html", title: "Roly Poly Monsters"},
+            {file: "rooftop-snipers-2.html", title: "Rooftop Snipers 2"},
+            {file: "rooftop-snipers.html", title: "Rooftop Snipers"},
+            {file: "rowdy-city-wrestling.html", title: "Rowdy City Wrestling"},
+            {file: "rowdy-wrestling.html", title: "Rowdy Wrestling"},
+            {file: "run-3-editor.html", title: "Run 3 Editor"},
+            {file: "running-fred.html", title: "Running Fred"},
+            {file: "rusher-crusher.html", title: "Rusher Crusher"},
+            {file: "sausage-flip.html", title: "Sausage Flip"},
+            {file: "school-bus-demolition-derby.html", title: "School Bus Demolition Derby"},
+            {file: "scrap-metal.html", title: "Scrap Metal"},
+            {file: "shoot-stickman.html", title: "Shoot Stickman"},
+            {file: "short-life.html", title: "Short Life"},
+            {file: "short-ride.html", title: "Short Ride"},
+            {file: "shortcut-race.html", title: "Shortcut Race"},
+            {file: "sketchbook-04.html", title: "Sketchbook 04"},
+            {file: "skiing-fred.html", title: "Skiing Fred"},
+            {file: "slime-road.html", title: "Slime Road"},
+            {file: "slope-2-multiplayer.html", title: "Slope 2 Multiplayer"},
+            {file: "slope-2.html", title: "Slope 2"},
+            {file: "slope-3.html", title: "Slope 3"},
+            {file: "slope-city.html", title: "Slope City"},
+            {file: "slope-tunnel.html", title: "Slope Tunnel"},
+            {file: "slope.html", title: "Slope"},
+            {file: "smash-karts.html", title: "Smash Karts"},
+            {file: "sniper-gun-shooting.html", title: "Sniper Gun Shooting"},
+            {file: "snow-rider-3d.html", title: "Snow Rider 3D"},
+            {file: "soccar.html", title: "Soccar"},
+            {file: "soccer-random.html", title: "Soccer Random"},
+            {file: "soccer-skills-champions-league.html", title: "Soccer Skills Champions League"},
+            {file: "soccer-skills-euro-cup.html", title: "Soccer Skills Euro Cup"},
+            {file: "soccer-skills-world-cup.html", title: "Soccer Skills World Cup"},
+            {file: "solitaire.html", title: "Solitaire"},
+            {file: "speed-boat-extreme-racing.html", title: "Speed Boat Extreme Racing"},
+            {file: "squish-run.html", title: "Squish Run"},
+            {file: "stack-ball.html", title: "Stack Ball"},
+            {file: "stack-bump-3d.html", title: "Stack Bump 3D"},
+            {file: "stack.html", title: "Stack"},
+            {file: "stacktris.html", title: "Stacktris"},
+            {file: "stair-race-3d.html", title: "Stair Race 3D"},
+            {file: "stealing-the-diamond.html", title: "Stealing the Diamond"},
+            {file: "stick-defenders.html", title: "Stick Defenders"},
+            {file: "stick-fighter.html", title: "Stick Fighter"},
+            {file: "stick-merge.html", title: "Stick Merge"},
+            {file: "stickman-army-team-battle.html", title: "Stickman Army Team Battle"},
+            {file: "stickman-army-the-resistance.html", title: "Stickman Army The Resistance"},
+            {file: "stickman-bike-pr.html", title: "Stickman Bike PR"},
+            {file: "stickman-bike.html", title: "Stickman Bike"},
+            {file: "stickman-boxing-ko-champion.html", title: "Stickman Boxing KO Champion"},
+            {file: "stickman-bridge-constructor.html", title: "Stickman Bridge Constructor"},
+            {file: "stickman-climb-2.html", title: "Stickman Climb 2"},
+            {file: "stickman-fighter-epic-battle-2.html", title: "Stickman Fighter Epic Battle 2"},
+            {file: "stickman-fighter-mega-brawl.html", title: "Stickman Fighter Mega Brawl"},
+            {file: "stickman-golf.html", title: "Stickman Golf"},
+            {file: "stickman-hook.html", title: "Stickman Hook"},
+            {file: "stickman-ragdoll-crash-fun.html", title: "Stickman Ragdoll Crash Fun"},
+            {file: "stickman-school-run.html", title: "Stickman School Run"},
+            {file: "stock-car-hero.html", title: "Stock Car Hero"},
+            {file: "street-ball-jam.html", title: "Street Ball Jam"},
+            {file: "striker-dummies.html", title: "Striker Dummies"},
+            {file: "stunt-car-challenge-3.html", title: "Stunt Car Challenge 3"},
+            {file: "stupid-zombies.html", title: "Stupid Zombies"},
+            {file: "subway-runner.html", title: "Subway Runner"},
+            {file: "subway-surfers-beijing.html", title: "Subway Surfers Beijing"},
+            {file: "subway-surfers-houston.html", title: "Subway Surfers Houston"},
+            {file: "subway-surfers-monaco.html", title: "Subway Surfers Monaco"},
+            {file: "subway-surfers-newyork.html", title: "Subway Surfers New York"},
+            {file: "subway-surfers.html", title: "Subway Surfers"},
+            {file: "super-bike-the-champion.html", title: "Super Bike the Champion"},
+            {file: "super-hexbee-merger.html", title: "Super Hexbee Merger"},
+            {file: "super-hot.html", title: "Super Hot"},
+            {file: "super-liquid-soccer.html", title: "Super Liquid Soccer"},
+            {file: "super-mario-64.html", title: "Super Mario 64"},
+            {file: "super-mario-bros.html", title: "Super Mario Bros"},
+            {file: "super-racing-gt-drag-pro.html", title: "Super Racing GT Drag Pro"},
+            {file: "super-santa-kicker.html", title: "Super Santa Kicker"},
+            {file: "super-star-car.html", title: "Super Star Car"},
+            {file: "super-tunnel-rush.html", title: "Super Tunnel Rush"},
+            {file: "superbattle-2.html", title: "Superbattle 2"},
+            {file: "superbike-hero.html", title: "Superbike Hero"},
+            {file: "survivor-in-rainbow-monster.html", title: "Survivor in Rainbow Monster"},
+            {file: "swatforce-vs-terrorists.html", title: "SWATForce vs Terrorists"},
+            {file: "swingo.html", title: "Swingo"},
+            {file: "tag.html", title: "Tag"},
+            {file: "tank-trouble-2.html", title: "Tank Trouble 2"},
+            {file: "tanuki-sunset.html", title: "Tanuki Sunset"},
+            {file: "temple-of-boom.html", title: "Temple of Boom"},
+            {file: "temple-run-2.html", title: "Temple Run 2"},
+            {file: "tennis-masters.html", title: "Tennis Masters"},
+            {file: "terris.html", title: "Terris"},
+            {file: "tetris-flash.html", title: "Tetris Flash"},
+            {file: "the-impossible-quiz.html", title: "The Impossible Quiz"},
+            {file: "the-little-giant.html", title: "The Little Giant"},
+            {file: "the-spear-stickman.html", title: "The Spear Stickman"},
+            {file: "there-is-no-game.html", title: "There Is No Game"},
+            {file: "three-goblets.html", title: "Three Goblets"},
+            {file: "thumb-fighter-christmas.html", title: "Thumb Fighter Christmas"},
+            {file: "thumb-fighter.html", title: "Thumb Fighter"},
+            {file: "tictactoe.html", title: "Tic Tac Toe"},
+            {file: "tiger-simulator-3d.html", title: "Tiger Simulator 3D"},
+            {file: "tiny-fishing.html", title: "Tiny Fishing"},
+            {file: "tinytownracing.html", title: "Tiny Town Racing"},
+            {file: "tomb-of-the-mask-color.html", title: "Tomb of the Mask Color"},
+            {file: "tomb-of-the-mask.html", title: "Tomb of the Mask"},
+            {file: "toon-off.html", title: "Toon Off"},
+            {file: "top-speed-3d.html", title: "Top Speed 3D"},
+            {file: "top-speed-racing-3d.html", title: "Top Speed Racing 3D"},
+            {file: "tower-of-destiny.html", title: "Tower of Destiny"},
+            {file: "traffic-mania.html", title: "Traffic Mania"},
+            {file: "traffic-rider.html", title: "Traffic Rider"},
+            {file: "tricks.html", title: "Tricks"},
+            {file: "truck-traffic.html", title: "Truck Traffic"},
+            {file: "tube-jumpers.html", title: "Tube Jumpers"},
+            {file: "tunnel-rush.html", title: "Tunnel Rush"},
+            {file: "turbo-moto-racer.html", title: "Turbo Moto Racer"},
+            {file: "two-ball-3d-dark.html", title: "Two Ball 3D Dark"},
+            {file: "two-neon-boxes.html", title: "Two Neon Boxes"},
+            {file: "ultimate-car-driving.html", title: "Ultimate Car Driving"},
+            {file: "unicycle-hero.html", title: "Unicycle Hero"},
+            {file: "vex-3.html", title: "Vex 3"},
+            {file: "vex-4.html", title: "Vex 4"},
+            {file: "vex-5.html", title: "Vex 5"},
+            {file: "vex-6.html", title: "Vex 6"},
+            {file: "vex-7.html", title: "Vex 7"},
+            {file: "volley-random.html", title: "Volley Random"},
+            {file: "volleyball-challenge.html", title: "Volleyball Challenge"},
+            {file: "water-color-sort.html", title: "Water Color Sort"},
+            {file: "we-become-what-we-behold.html", title: "We Become What We Behold"},
+            {file: "wheely-8.html", title: "Wheely 8"},
+            {file: "where-is-my-cat.html", title: "Where is My Cat"},
+            {file: "who-is.html", title: "Who Is"},
+            {file: "wizard-mike.html", title: "Wizard Mike"},
+            {file: "wood-blocks-3d.html", title: "Wood Blocks 3D"},
+            {file: "word-city-crossed.html", title: "Word City Crossed"},
+            {file: "word-city-uncrossed.html", title: "Word City Uncrossed"},
+            {file: "wordle-unlimited.html", title: "Wordle Unlimited"},
+            {file: "words-search-classic-edition.html", title: "Words Search Classic Edition"},
+            {file: "worlds-hardest-game-2.html", title: "World's Hardest Game 2"},
+            {file: "worlds-hardest-game-3.html", title: "World's Hardest Game 3"},
+            {file: "wrassling.html", title: "Wrassling"},
+            {file: "zombie-derby-pixel-survival.html", title: "Zombie Derby Pixel Survival"}
+        ];
+        games.forEach(game => {
+            game.searchKey = game.title.toLowerCase().replace(/[^a-z0-9]/g, '');
+        });
+        const searchInput = document.getElementById('searchInput');
+        const searchDropdown = document.getElementById('searchDropdown');
+        const resultsContainer = document.getElementById('resultsContainer');
+        function showResults(query = '') {
+            resultsContainer.innerHTML = '';
+            const lowerQuery = query.toLowerCase().replace(/[^a-z0-9]/g, '');
+            let filtered = games;
+            if (lowerQuery) {
+                filtered = games.filter(game => game.searchKey.includes(lowerQuery));
+            } else {
+                filtered = [games.find(g => g.file === "1v1-lol.html"),
+                            games.find(g => g.file === "retro-bowl.html"),
+                            games.find(g => g.file === "drive-mad.html"),
+                            games.find(g => g.file === "geometry-dash.html"),
+                            games.find(g => g.file === "cookie-clicker.html")].filter(Boolean);
+            }
+            filtered = filtered.slice(0, 5);
+            if (filtered.length === 0) {
+                resultsContainer.innerHTML = '<div class="no-results">No se encontraron juegos</div>';
+            } else {
+                filtered.forEach(game => {
+                    const item = document.createElement('div');
+                    item.className = 'search-result-item';
+                    item.onclick = () => location.href = `https://unlockedvalle.github.io/play/${game.file.replace('.html', '')}`;
+                    item.innerHTML = `
+                        <img src="https://23-azo.github.io/imgs/${game.file.replace('.html', '.png')}"
+                             class="result-img"
+                             alt="${game.title}"
+                             onerror="this.src='https://via.placeholder.com/60?text=No+Img'">
+                        <div class="result-title">${game.title}</div>
+                    `;
+                    resultsContainer.appendChild(item);
+                });
+            }
+            searchDropdown.querySelector('h3').textContent = lowerQuery ? 'RESULTADOS DE BÚSQUEDA' : 'TRENDING SEARCHES';
+        }
+        searchInput.addEventListener('input', (e) => {
+            showResults(e.target.value);
+            searchDropdown.classList.add('active');
+        });
+        searchInput.addEventListener('focus', () => {
+            showResults(searchInput.value);
+            searchDropdown.classList.add('active');
+        });
+        searchInput.addEventListener('blur', () => {
+            setTimeout(() => searchDropdown.classList.remove('active'), 200);
+        });
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+                searchDropdown.classList.remove('active');
+            }
+        });
+        showResults();
+    </script>
+</body>
 </html>
