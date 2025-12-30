@@ -3,115 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zephiryx Gaming - Search</title>
+    <title>Zephiryx Gaming - Juega sin que te pillen</title>
+    <link rel="icon" type="image/png" href="https://files.catbox.moe/2u6mbz.png">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --primary: #00ff99;
+            --primary-dark: #00cc77;
+            --dark: #000000;
+            --dark-2: #121212;
+            --light: #ffffff;
+            --gray: #727272;
         }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #0a1f0a 0%, #051005 100%);
-            color: #d4ffd4;
-            min-height: 100vh;
-            padding: 30px 20px;
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:var(--dark); color:var(--light); font-family:'Poppins',sans-serif; overflow-x:hidden; }
+        ::selection { background:var(--primary); color:black; }
+        /* Navbar */
+        .nav {
+            position:fixed;
+            top:0; left:0; right:0;
+            padding:1.5rem;
+            background:transparent;
+            backdrop-filter:blur(10px);
+            z-index:100;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
         }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
+        .nav-logo {
+            font-size:1.5rem;
+            font-weight:800;
+            color:var(--primary);
+            display:flex;
+            align-items:center;
+            gap:0.5rem;
+            letter-spacing:-0.05em;
+            text-decoration:none;
         }
-
-        h1 {
-            font-size: 3.2rem;
-            font-weight: 900;
-            color: #39ff14;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-shadow: 0 0 20px rgba(57, 255, 20, 0.6), 0 0 40px rgba(57, 255, 20, 0.4);
+        .nav-logo img {
+            width:38px;
+            height:38px;
+            object-fit:contain;
+            background:transparent;
+            border-radius:0;
         }
-
+        .nav-links {
+            display:flex;
+            align-items:center;
+            gap:2rem;
+        }
+        .nav-links a {
+            color:var(--light);
+            text-decoration:none;
+            font-weight:500;
+            position:relative;
+            font-size:0.95rem;
+            transition:color 0.3s;
+        }
+        .nav-links a:hover { color:var(--primary); }
+        .nav-links a::after {
+            content:'';
+            position:absolute;
+            width:0; height:2px;
+            bottom:-6px; left:0;
+            background:var(--primary);
+            transition:width 0.3s ease;
+        }
+        .nav-links a:hover::after { width:100%; }
+        /* Barra de búsqueda navbar */
         .search-container {
-            position: relative;
-            width: 100%;
-            max-width: 700px;
-            margin: 0 auto 40px;
+            position:relative;
+            width:280px;
         }
-
-        #searchInput {
+        .search-input {
+            width:100%;
+            padding:0.75rem 1rem 0.75rem 2.8rem;
+            background:rgba(255,255,255,0.08);
+            border:2px solid transparent;
+            border-radius:50px;
+            color:white;
+            font-size:0.95rem;
+            backdrop-filter:blur(8px);
+            transition:all 0.3s;
+        }
+        .search-input::placeholder {
+            color:rgba(255,255,255,0.6);
+        }
+        .search-input:focus {
+            outline:none;
+            background:rgba(255,255,255,0.12);
+            border:2px solid var(--primary);
+            box-shadow:0 0 20px rgba(0,255,153,0.4);
+        }
+        .search-icon {
+            position:absolute;
+            left:0.9rem;
+            top:50%;
+            transform:translateY(-50%);
+            color:var(--gray);
+            font-size:1.1rem;
+            pointer-events:none;
+            transition:color 0.3s;
+        }
+        .search-input:focus ~ .search-icon {
+            color:var(--primary);
+        }
+        /* Dropdown de búsqueda navbar */
+        .search-dropdown {
+            position:absolute;
+            top:100%;
+            right:0;
+            width:400px;
+            background:rgba(18,18,18,0.95);
+            backdrop-filter:blur(15px);
+            border:2px solid var(--primary);
+            border-radius:20px;
+            margin-top:12px;
+            padding:20px;
+            box-shadow:0 10px 40px rgba(0,255,153,0.2);
+            display:none;
+            z-index:999;
+            max-height:70vh;
+            overflow-y:auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .search-dropdown::-webkit-scrollbar { display: none; }
+        .search-dropdown.active { display:block; animation:fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+        .search-dropdown h3 { font-size:1.4rem; color:var(--light); margin-bottom:15px; text-align:left; font-weight:600; }
+        .no-results { color:var(--gray); font-style:italic; text-align:center; padding:20px; }
+        .search-result-item {
+            display:flex;
+            align-items:center;
+            gap:15px;
+            padding:12px 0;
+            border-bottom:1px solid rgba(255,255,255,0.08);
+            cursor:pointer;
+            transition:background 0.2s;
+        }
+        .search-result-item:hover {
+            background:rgba(255,255,255,0.05);
+            border-radius:12px;
+            padding-left:10px;
+            padding-right:10px;
+        }
+        .search-result-item:last-child { border-bottom:none; }
+        .result-img { width:60px; height:60px; object-fit:cover; border-radius:12px; background:#222; }
+        .result-title { flex:1; font-size:1.1rem; color:var(--light); }
+        /* Barra de búsqueda para el grid */
+        .grid-search-container {
+            max-width: 700px;
+            margin: 120px auto 40px;
+            padding: 0 20px;
+            position: relative;
+        }
+        #gridSearchInput {
             width: 100%;
-            padding: 16px 20px 16px 50px; /* Espacio para la lupa */
+            padding: 16px 20px 16px 50px;
             font-size: 1.1rem;
             background: rgba(10, 31, 10, 0.7);
-            border: 2px solid #39ff14;
+            border: 2px solid var(--primary);
             border-radius: 50px;
-            color: #d4ffd4;
+            color: var(--light);
             outline: none;
             transition: all 0.3s;
-            box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+            box-shadow: 0 0 15px rgba(0,255,153,0.2);
         }
-
-        #searchInput:focus {
-            border-color: #00ff9d;
-            box-shadow: 0 0 25px rgba(0, 255, 157, 0.4);
-            background: rgba(10, 31, 10, 0.9);
+        #gridSearchInput:focus {
+            border-color: #66ffbb;
+            box-shadow: 0 0 25px rgba(102,255,187,0.4);
         }
-
-        .search-icon {
+        .grid-search-icon {
             position: absolute;
-            left: 18px;
+            left: 38px;
             top: 50%;
             transform: translateY(-50%);
-            color: #39ff14;
+            color: var(--primary);
             font-size: 1.3rem;
             pointer-events: none;
         }
-
+        /* Grid de juegos */
         #gameList {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 30px;
             max-width: 1400px;
-            margin: 0 auto;
+            margin: 0 auto 60px;
+            padding: 0 20px;
         }
-
         .game-item {
             cursor: pointer;
             transition: all 0.35s ease;
             border-radius: 16px;
             overflow: hidden;
-            background: rgba(20, 50, 20, 0.4);
+            background: rgba(20, 20, 20, 0.6);
             backdrop-filter: blur(6px);
-            border: 1px solid rgba(57, 255, 20, 0.25);
+            border: 1px solid rgba(0,255,153,0.25);
         }
-
         .game-item:hover {
             transform: translateY(-12px) scale(1.04);
-            border-color: #39ff14;
-            box-shadow: 0 20px 40px rgba(57, 255, 20, 0.25);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0,255,153,0.25);
         }
-
         .game-item img {
             width: 100%;
             height: 220px;
             object-fit: cover;
             display: block;
-            border-bottom: 2px solid rgba(57, 255, 20, 0.3);
+            border-bottom: 2px solid rgba(0,255,153,0.3);
         }
-
         .game-item p {
             padding: 18px 15px;
             font-size: 1.15rem;
             font-weight: 700;
-            color: #39ff14;
+            color: var(--primary);
             text-align: center;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-
         #loadMore {
             display: flex;
             align-items: center;
@@ -123,47 +234,157 @@
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 2px;
-            background: linear-gradient(90deg, #39ff14, #00ff9d);
-            color: #0a1f0a;
+            background: linear-gradient(90deg, var(--primary), #66ffbb);
+            color: black;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(57, 255, 20, 0.4);
+            box-shadow: 0 10px 30px rgba(0,255,153,0.4);
         }
-
         #loadMore:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(57, 255, 20, 0.6);
-            background: linear-gradient(90deg, #00ff9d, #39ff14);
+            box-shadow: 0 15px 40px rgba(0,255,153,0.6);
         }
-
-        #loadMore i {
-            font-size: 1.3rem;
+        #loadMore i { font-size: 1.3rem; }
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #000000 0%, #0f0f0f 100%);
+            padding: 7vw 5% 3vw;
+            margin-top: 8vw;
+            border-top: 3px solid var(--primary);
+            position: relative;
+            box-shadow: 0 -10px 30px rgba(0, 255, 153, 0.15);
         }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 2.4rem; }
-            .game-item img { height: 180px; }
-            #loadMore { font-size: 1rem; padding: 14px 30px; }
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            box-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary);
+        }
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6vw;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding-bottom: 3vw;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .footer-brand { flex: 1 1 300px; }
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--primary);
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+        }
+        .footer-logo img { width: 48px; height: 48px; }
+        .footer-desc { color: #bbb; font-size: 1rem; line-height: 1.7; margin-bottom: 2rem; }
+        .footer-social { display: flex; gap: 1.8rem; }
+        .footer-social a { color: #aaa; font-size: 2.2rem; transition: all 0.4s; }
+        .footer-social a:hover { color: var(--primary); text-shadow: 0 0 15px var(--primary); }
+        .footer-links { display: flex; flex-wrap: wrap; gap: 6vw; flex: 2 1 500px; justify-content: flex-end; }
+        .links-group { flex: 1 1 160px; }
+        .links-group h4 { color: var(--primary); font-size: 1.2rem; margin-bottom: 1.2rem; font-weight: 600; }
+        .links-group a { display: block; color: #aaa; text-decoration: none; margin-bottom: 0.8rem; font-size: 1rem; transition: color 0.3s; }
+        .links-group a:hover { color: var(--primary); }
+        .footer-bottom { text-align: center; padding-top: 2.5vw; color: #777; font-size: 0.95rem; }
+        .footer-bottom span { color: var(--primary); font-weight: 500; }
+        @media (max-width: 1200px) {
+            .footer-container { flex-direction: column; align-items: center; text-align: center; gap: 5rem; }
+            .footer-brand { text-align: center; }
+            .footer-logo { justify-content: center; }
+            .footer-social { justify-content: center; }
+            .footer-links { flex-direction: column; width: 100%; gap: 4.5rem; justify-content: center; align-items: center; }
+            .links-group { flex: none; text-align: center; width: 100%; max-width: 350px; }
+            .links-group a { display: inline-block; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>ZEPHYRYX GAMING</h1>
-    </header>
+    <!-- NAVBAR CON BÚSQUEDA EXACTA AL ORIGINAL -->
+    <nav class="nav">
+        <a href="/" class="nav-logo">
+            <img src="https://files.catbox.moe/2u6mbz.png" alt="Zephiryx">
+            Gaming
+        </a>
+        <div class="nav-links">
+            <a href="#popular">Popular</a>
+            <a href="#all">Juegos</a>
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="navSearchInput" class="search-input" placeholder="Buscar juegos...">
+                <div class="search-dropdown" id="navSearchDropdown">
+                    <h3>RESULTADOS DE BÚSQUEDA</h3>
+                    <div id="navResultsContainer" class="no-results">Escribe para buscar juegos...</div>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-    <div class="search-container">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" id="searchInput" placeholder="BUSCAR JUEGO...">
+    <!-- BARRA DE BÚSQUEDA PARA EL GRID -->
+    <div class="grid-search-container">
+        <i class="fas fa-search grid-search-icon"></i>
+        <input type="text" id="gridSearchInput" placeholder="BUSCAR EN LA LISTA DE JUEGOS...">
     </div>
 
+    <!-- GRID DE JUEGOS -->
     <div id="gameList"></div>
 
+    <!-- BOTÓN CARGAR MÁS -->
     <button id="loadMore">
         <i class="fas fa-arrow-down"></i> CARGAR MÁS
     </button>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="/" class="footer-logo">
+                    <img src="https://files.catbox.moe/2u6mbz.png" alt="Zephiryx Gaming">
+                    <span>Zephiryx Gaming</span>
+                </a>
+                <p class="footer-desc">Juega sin que te pillen 😈<br>+500 juegos desbloqueados para clase y trabajo.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <div class="links-group">
+                    <h4>Explora</h4>
+                    <a href="#popular">Popular</a>
+                    <a href="#all">Todos los juegos</a>
+                    <a href="/">Inicio</a>
+                </div>
+                <div class="links-group">
+                    <h4>Legal</h4>
+                    <a href="#">Términos</a>
+                    <a href="#">Privacidad</a>
+                    <a href="#">DMCA</a>
+                </div>
+                <div class="links-group">
+                    <h4>Comunidad</h4>
+                    <a href="#">Sugerir juego</a>
+                    <a href="#">Contacto</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Zephiryx Gaming. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
     <script>
         const games = [
@@ -617,33 +838,28 @@
         let currentIndex = 0;
         const batchSize = 12;
 
-        function titleCase(slug) {
-            return slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        function titleCase(str) {
+            return str.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         }
 
-        function renderGames(filtered, start, end) {
+        function renderGames(list, start, end) {
             const container = document.getElementById('gameList');
-            for (let i = start; i < end && i < filtered.length; i++) {
-                const slug = filtered[i];
+            for (let i = start; i < end && i < list.length; i++) {
+                const slug = list[i];
                 const item = document.createElement('div');
                 item.className = 'game-item';
                 item.innerHTML = `
                     <img src="https://23-azo.github.io/imgs/${slug}.png" alt="${titleCase(slug)}"
-                         onerror="this.src='https://via.placeholder.com/300x220/0a1f0a/39ff14?text=${slug.toUpperCase()}'">
+                         onerror="this.src='https://via.placeholder.com/300x220/000000/00ff99?text=${slug.toUpperCase()}'">
                     <p>${titleCase(slug)}</p>
                 `;
                 item.onclick = () => window.open(`https://unlockedvalle.github.io/play/${slug}.html`, '_blank');
                 container.appendChild(item);
             }
-            updateLoadMoreButton(filtered);
+            document.getElementById('loadMore').style.display = currentIndex >= list.length ? 'none' : 'flex';
         }
 
-        function updateLoadMoreButton(filtered) {
-            const btn = document.getElementById('loadMore');
-            btn.style.display = currentIndex >= filtered.length ? 'none' : 'flex';
-        }
-
-        let currentList = games;
+        let currentList = games.slice();
 
         function loadInitial() {
             currentIndex = batchSize;
@@ -658,9 +874,72 @@
             renderGames(currentList, start, currentIndex);
         };
 
-        document.getElementById('searchInput').oninput = (e) => {
-            const term = e.target.value.toLowerCase().trim();
-            currentList = games.filter(g => g.toLowerCase().includes(term));
+        // BÚSQUEDA NAVBAR EXACTA AL ORIGINAL
+        const navSearchInput = document.getElementById('navSearchInput');
+        const navSearchDropdown = document.getElementById('navSearchDropdown');
+        const navResultsContainer = document.getElementById('navResultsContainer');
+
+        function showResults(query = '') {
+            navResultsContainer.innerHTML = '';
+            const lowerQuery = query.toLowerCase().replace(/[^a-z0-9]/g, '');
+            let filtered = games;
+            if (lowerQuery) {
+                filtered = games.filter(slug => slug.toLowerCase().replace(/[^a-z0-9]/g, '').includes(lowerQuery));
+            } else {
+                filtered = ["1v1-lol", "retro-bowl", "drive-mad", "geometry-dash", "cookie-clicker"];
+            }
+            filtered = filtered.slice(0, 5);
+            if (filtered.length === 0) {
+                navResultsContainer.innerHTML = '<div class="no-results">No se encontraron juegos</div>';
+            } else {
+                filtered.forEach(slug => {
+                    const item = document.createElement('div');
+                    item.className = 'search-result-item';
+                    item.onclick = () => location.href = `https://unlockedvalle.github.io/play/${slug}`;
+                    item.innerHTML = `
+                        <img src="https://23-azo.github.io/imgs/${slug}.png"
+                             class="result-img"
+                             alt="${titleCase(slug)}"
+                             onerror="this.src='https://via.placeholder.com/60?text=No+Img'">
+                        <div class="result-title">${titleCase(slug)}</div>
+                    `;
+                    navResultsContainer.appendChild(item);
+                });
+            }
+            navSearchDropdown.querySelector('h3').textContent = lowerQuery ? 'RESULTADOS DE BÚSQUEDA' : 'BÚSQUEDAS POPULARES';
+        }
+
+        navSearchInput.addEventListener('input', (e) => {
+            showResults(e.target.value);
+            navSearchDropdown.classList.add('active');
+        });
+
+        navSearchInput.addEventListener('focus', () => {
+            showResults(navSearchInput.value);
+            navSearchDropdown.classList.add('active');
+        });
+
+        navSearchInput.addEventListener('blur', () => {
+            setTimeout(() => navSearchDropdown.classList.remove('active'), 200);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!navSearchInput.contains(e.target) && !navSearchDropdown.contains(e.target)) {
+                navSearchDropdown.classList.remove('active');
+            }
+        });
+
+        showResults();
+
+        // BÚSQUEDA GRID INDEPENDIENTE
+        document.getElementById('gridSearchInput').oninput = (e) => {
+            const query = e.target.value.trim().toLowerCase();
+            if (query === '') {
+                currentList = games.slice();
+            } else {
+                const queryWords = query.split(/\s+/).filter(w => w.length > 0);
+                currentList = games.filter(slug => queryWords.every(word => slug.toLowerCase().includes(word)));
+            }
             currentIndex = batchSize;
             document.getElementById('gameList').innerHTML = '';
             renderGames(currentList, 0, currentIndex);
